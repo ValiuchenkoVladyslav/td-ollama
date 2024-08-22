@@ -1,0 +1,50 @@
+{
+  "bundle": {
+    "active": true,
+    "targets": "msi",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "build": {
+    "beforeDevCommand": "bun --cwd gui next-dev",
+    "beforeBuildCommand": "bun --cwd gui next-build",
+    "frontendDist": "../gui/out/",
+    "devUrl": "http://localhost:3000"
+  },
+  "productName": "tg-llama",
+  "identifier": "tg-llama",
+  "plugins": {},
+  "app": {
+    "windows": [
+      {
+        "decorations": false,
+        "resizable": true,
+        "minWidth": 1460,
+        "minHeight": 720,
+        "maximized": true
+      }
+    ],
+    "security": {
+      "capabilities": [
+        {
+          "identifier": "General capabilities",
+          "description": "General capabilities",
+          "windows": ["main"],
+          "permissions": [
+            "core:default",
+            "core:window:allow-maximize",
+            "core:window:allow-unmaximize",
+            "core:window:allow-minimize",
+            "core:window:allow-close",
+            "core:window:allow-start-dragging"
+          ]
+        }
+      ]
+    }
+  }
+}
