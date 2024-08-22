@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/node_modules/": true,
+    "gui/.next/": true,
+    "gui/next-env.d.ts": true,
+    "gui/out/": true,
+    "bun.lockb": true,
+
+    "core/target/": true,
+    "core/Cargo.lock": true,
+  },
+  "editor.inlayHints.enabled": "offUnlessPressed"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "tg-llama",
+  "private": true,
+  "workspaces": [
+    "./gui/"
+  ],
+  "scripts": {
+    "dev": "tauri dev -c core/tauri.conf.json",
+    "build:debug": "tauri build -c core/tauri.conf.json -d",
+    "build:prod": "tauri build -c core/tauri.conf.json",
+    "install-deps": "bun install && cargo install --path core"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0-rc.6"
+  }
+}
