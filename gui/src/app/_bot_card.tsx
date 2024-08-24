@@ -10,6 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { API, invoke } from "~/core-api";
 import { PasswordInput } from "~/components/ui/password-input";
+import { useAppStore } from "~/store";
 
 type BotCardData = {
   token: string;
@@ -30,6 +31,7 @@ const BotCardsContext = createContext({} as {
 export function BotCard(props: BotCardProps) {
   const { setBotCards } = useContext(BotCardsContext);
   const [isBotRunning, setIsBotRunning] = useState(false);
+  const isOllamaRunning = useAppStore((state) => state.isOllamaRunning);
 
   const {
     control,
@@ -45,13 +47,12 @@ export function BotCard(props: BotCardProps) {
 
   const submitBotData: SubmitHandler<BotCardData> = (data) => {
     if (isBotRunning) {
+      invoke(API.StopBot, { token: data.token });
       setIsBotRunning(false);
       return;
     }
 
-    // validate data
     invoke(API.RunBot, data);
-
     setIsBotRunning(true);
   }
 
@@ -94,7 +95,7 @@ export function BotCard(props: BotCardProps) {
 
       <div className="flex justify-between">
         <div className="flex gap-4">
-          <Button className="text-lg w-[160px]">
+          <Button disabled={!isOllamaRunning} className="text-lg w-[160px]">
             {isBotRunning ? <Ban size={20} /> : <Play size={20} />}
             <span className="pl-2">
               {isBotRunning ? "STOP BOT" : "START BOT"}
