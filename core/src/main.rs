@@ -14,7 +14,7 @@ fn main() {
       let app_state = AppState::load(app.app_handle());
 
       if app_state.manage_ollama {
-        ollama::start_ollama();
+        ollama::tauri_commands::start_ollama();
       }
 
       app.manage(Mutex::new(app_state));
@@ -27,7 +27,7 @@ fn main() {
         let app_state = state_mutex.lock().unwrap();
 
         if app_state.manage_ollama {
-          ollama::stop_ollama();
+          ollama::tauri_commands::stop_ollama();
         }
 
         app_state.save(app.app_handle());
@@ -36,12 +36,12 @@ fn main() {
     })
     // WARNING: UPDATE gui/src/core-api.ts WHENEVER YOU CHANGE COMMANDS
     .invoke_handler(tauri::generate_handler![
-      bot::run_bot,
-      bot::stop_bot,
-      ollama::start_ollama,
-      ollama::stop_ollama,
-      ollama::check_ollama,
-      ollama::set_manage_ollama,
+      bot::tauri_commands::run_bot,
+      bot::tauri_commands::stop_bot,
+      ollama::tauri_commands::start_ollama,
+      ollama::tauri_commands::stop_ollama,
+      ollama::tauri_commands::check_ollama,
+      ollama::tauri_commands::set_manage_ollama,
     ])
     .run(tauri::generate_context!())
     .unwrap();
