@@ -1,10 +1,12 @@
 // WARNING: UPDATE THIS FILE WHENEVER YOU CHANGE CORE COMMANDS
 export enum API {
   RunBot = "run_bot",
+  StopBot = "stop_bot",
 
   StartOllama = "start_ollama",
   StopOllama = "stop_ollama",
   CheckOllama = "check_ollama",
+  SetManageOllama = "set_manage_ollama",
 }
 
 export async function invoke<
@@ -12,6 +14,10 @@ export async function invoke<
   Command extends {
     [API.RunBot]: {
       args: { token: string; model: string; };
+      return: void;
+    };
+    [API.StopBot]: {
+      args: { token: string; };
       return: void;
     };
   
@@ -26,6 +32,10 @@ export async function invoke<
     [API.CheckOllama]: {
       args: undefined;
       return: boolean;
+    };
+    [API.SetManageOllama]: {
+      args: { manage: boolean; };
+      return: void;
     };
   }[CommandName]
 >(
