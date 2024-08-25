@@ -24,12 +24,12 @@ pub async fn handle_command(bot: Bot, msg: Message, cmd: Command) -> HandlerResu
   Ok(())
 }
 
-pub async fn handle_message(bot: Bot, msg: Message, model: String) -> HandlerResult {
+pub async fn handle_message(bot: Bot, msg: Message, system: String, model: String) -> HandlerResult {
   let Some(message_text) = msg.text() else {
     return Ok(()); // Ignore non-text messages
   };
 
-  let res = ollama::api::chat(message_text.into(), model.clone()).await;
+  let res = ollama::api::chat(system, message_text.into(), model).await;
 
   bot.send_message(msg.chat.id, res.message.content).await?;
 
