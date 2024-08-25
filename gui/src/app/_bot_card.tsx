@@ -6,11 +6,11 @@ import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Ban, Play, Plus } from "lucide-react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "~/components/ui/alert-dialog";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { API, invoke } from "~/core-api";
 import { PasswordInput } from "~/components/ui/password-input";
 import { useAppStore } from "~/store";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 
 type BotCardData = {
   token: string;
@@ -32,6 +32,7 @@ export function BotCard(props: BotCardProps) {
   const { setBotCards } = useContext(BotCardsContext);
   const [isBotRunning, setIsBotRunning] = useState(false);
   const isOllamaRunning = useAppStore((state) => state.isOllamaRunning);
+  const localModels = useAppStore((state) => state.localModels);
 
   const {
     control,
@@ -45,28 +46,24 @@ export function BotCard(props: BotCardProps) {
     setBotCards((prevBotCards) => prevBotCards.map((card) => card.cardKey === props.cardKey ? botCard : card));
   }
 
-  const submitBotData: SubmitHandler<BotCardData> = (data) => {
+  const submitBotData = handleSubmit((data) => {
     if (isBotRunning) {
       invoke(API.StopBot, { token: data.token });
       setIsBotRunning(false);
       return;
     }
 
-    invoke(API.RunBot, data);
+    invoke(API.RunBot, { ...data, system: data.systemPrompt });
     setIsBotRunning(true);
-  }
+  });
 
   return (
-    <form
-      className="rounded-xl bg-slate-950 p-8 flex flex-col gap-4"
-      onSubmit={handleSubmit(submitBotData)}
-    >
+    <form onSubmit={submitBotData} className="rounded-xl bg-slate-950 p-8 flex flex-col gap-4">
       <PasswordInput
         placeholder="Telegram bot token"
         defaultValue={props.token}
-        aria-invalid={!!errors.token}
         disabled={isBotRunning}
-        className="aria-[invalid=true]:border-red-600"
+        className={errors.token && "border-red-600"}
         {...register("token", {
           required: true,
           onChange: ({ target }) => updateBotCard({ ...props, token: target.value })
@@ -116,44 +113,45 @@ export function BotCard(props: BotCardProps) {
                 disabled={isBotRunning}
               >
                 <SelectTrigger aria-invalid={!!errors.model} className="w-[140px] aria-[invalid=true]:border-red-600">
-                  <SelectValue placeholder="Model" aria-invalid={!!errors.model} />
+                  <SelectValue placeholder="Model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mistral">mistral</SelectItem>
-                  <SelectItem value="phi3">phi3</SelectItem>
-                  <SelectItem value="llama3.1">llama3.1</SelectItem>
+                  {localModels.map((model) =>
+                    <SelectItem key={model} value={model}>{model}</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             )}
           />
         </div>
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button variant="destructive" className="text-lg" disabled={isBotRunning}>
               DELETE
             </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete bot preset?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your bot preset
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button className="text-lg !bg-destructive text-white" onClick={() => {
-                  localStorage.removeItem(props.cardKey);
-                  setBotCards((prevBotCards) => prevBotCards.filter((card) => card.cardKey !== props.cardKey));
-                }}>
-                  DELETE
-                </Button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel className="text-lg">
+              Delete bot preset?<br />
+              <p className="text-sm opacity-75">This will permanently delete your bot preset</p>
+            </DropdownMenuLabel>
+
+            <DropdownMenuSeparator /> 
+
+            <DropdownMenuItem className="flex items-center gap-2 p-1">
+              <Button variant="destructive" className="text-lg" size="sm" onClick={() => {
+                localStorage.removeItem(props.cardKey);
+                setBotCards((prevBotCards) => prevBotCards.filter((card) => card.cardKey !== props.cardKey));
+              }}>
+                DELETE
+              </Button>
+              <Button variant="secondary" size="sm">
+                Cancel
+              </Button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </form>
   );
