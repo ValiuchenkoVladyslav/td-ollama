@@ -1,5 +1,5 @@
-use ollama_rs::{generation::completion::request::GenerationRequest, Ollama};
 use teloxide::{prelude::{Bot, Message, Requester}, utils::command::BotCommands};
+use crate::ollama;
 
 type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
@@ -29,11 +29,9 @@ pub async fn handle_message(bot: Bot, msg: Message, model: String) -> HandlerRes
     return Ok(()); // Ignore non-text messages
   };
 
-  let res = Ollama::default().generate(GenerationRequest::new(
-    model, message_text.into(),
-  )).await.unwrap();
+  let res = ollama::api::chat(message_text.into(), model.clone()).await;
 
-  bot.send_message(msg.chat.id, res.response).await?;
+  bot.send_message(msg.chat.id, res.message.content).await?;
 
   Ok(())
 }
