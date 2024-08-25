@@ -7,13 +7,14 @@ export enum API {
   StopOllama = "stop_ollama",
   CheckOllama = "check_ollama",
   SetManageOllama = "set_manage_ollama",
+  ListModels = "list_models",
 }
 
 export async function invoke<
   CommandName extends API,
   Command extends {
     [API.RunBot]: {
-      args: { token: string; model: string; };
+      args: { token: string; system: string; model: string; };
       return: void;
     };
     [API.StopBot]: {
@@ -36,6 +37,10 @@ export async function invoke<
     [API.SetManageOllama]: {
       args: { manage: boolean; };
       return: void;
+    };
+    [API.ListModels]: {
+      args: undefined;
+      return: { models: { name: string }[] };
     };
   }[CommandName]
 >(

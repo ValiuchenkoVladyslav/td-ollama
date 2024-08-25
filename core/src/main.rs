@@ -42,6 +42,7 @@ fn main() {
       ollama::tauri_commands::stop_ollama,
       ollama::tauri_commands::check_ollama,
       ollama::tauri_commands::set_manage_ollama,
+      ollama::tauri_commands::list_models,
     ])
     .run(tauri::generate_context!())
     .unwrap();
