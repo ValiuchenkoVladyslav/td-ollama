@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { API, invoke } from "./core-api";
 
-export const manageOllamaKey = "manageOllama";
+const manageOllamaKey = "manageOllama";
+const localModelsKey = "localModels";
 
 export const useAppStore = create((_set: any) => {
   const set: (typeof useAppStore)["setState"] = _set;
@@ -21,10 +22,22 @@ export const useAppStore = create((_set: any) => {
   
       invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
     },
+
+    localModels: [] as string[],
+
     async initStore() {
+      const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
+
+      const localModels = isOllamaRunning
+        ? (await invoke(API.ListModels, undefined)).data?.models.map(model => model.name)
+        : JSON.parse(localStorage.getItem(localModelsKey) ?? "") ?? [];
+
+      if (isOllamaRunning) localStorage.setItem(localModelsKey, JSON.stringify(localModels));
+
       set(({
-        isOllamaRunning: !!(await invoke(API.CheckOllama, undefined)).data,
+        isOllamaRunning,
         manageOllama: localStorage.getItem(manageOllamaKey) === "true",
+        localModels
       }));
     }
   };

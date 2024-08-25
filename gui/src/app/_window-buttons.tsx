@@ -2,16 +2,15 @@
 
 import { Webview } from "@tauri-apps/api/webview";
 import { Maximize, X } from "lucide-react";
-import { useEffect } from "react";
+
+let appWindow: Webview | null = null;
 
 export default function WindowButtons() {
-  let appWindow: Webview | null = null;
-
-  useEffect(() => {
-    import("@tauri-apps/api/webview").then((windowApi) => {
-      appWindow = windowApi.getCurrentWebview();
-    });
-  }, []);
+  if (typeof window !== "undefined") {
+    import("@tauri-apps/api/webview").then((windowApi) =>
+      appWindow = windowApi.getCurrentWebview()
+    );
+  }
 
   return (
     <>
