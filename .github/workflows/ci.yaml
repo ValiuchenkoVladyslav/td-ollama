@@ -1,0 +1,61 @@
+name: code-quality-check
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "LICENSE"
+      - ".vscode/settings.json"
+      - "**/*.{jpg,jpeg,png,ico,svg}"
+
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "LICENSE"
+      - ".vscode/settings.json"
+      - "**/*.{jpg,jpeg,png,ico,svg}"
+
+jobs:
+  check-linting:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # install bun
+      - uses: oven-sh/setup-bun@v1
+
+      # install rust
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+          toolchain: nightly
+
+      - name: Install bun dependencies
+        run: bun install
+
+      - name: Check project linting
+        run: bun lint:check
+
+  check-compile:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # install bun
+      - uses: oven-sh/setup-bun@v1
+
+      # install rust
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+          toolchain: nightly
+
+      - name: Install bun dependencies
+        run: bun install
+
+      - name: Check if project compiles
+        run: bun build:debug
