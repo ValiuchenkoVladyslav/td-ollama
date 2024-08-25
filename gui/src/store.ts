@@ -4,41 +4,45 @@ import { API, invoke } from "./core-api";
 const manageOllamaKey = "manageOllama";
 const localModelsKey = "localModels";
 
+// biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
 export const useAppStore = create((_set: any) => {
-  const set: (typeof useAppStore)["setState"] = _set;
+	const set: (typeof useAppStore)["setState"] = _set;
 
-  return {
-    manageOllama: false,
-    setManageOllama(manageOllama: boolean) {
-      localStorage.setItem(manageOllamaKey, String(manageOllama));
-      invoke(API.SetManageOllama, { manage: manageOllama });
-  
-      set({ manageOllama });
-    },
+	return {
+		manageOllama: false,
+		setManageOllama(manageOllama: boolean) {
+			localStorage.setItem(manageOllamaKey, String(manageOllama));
+			invoke(API.SetManageOllama, { manage: manageOllama });
 
-    isOllamaRunning: false,
-    setIsOllamaRunning(setRunning: boolean) {
-      set({ isOllamaRunning: setRunning });
-  
-      invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
-    },
+			set({ manageOllama });
+		},
 
-    localModels: [] as string[],
+		isOllamaRunning: false,
+		setIsOllamaRunning(setRunning: boolean) {
+			set({ isOllamaRunning: setRunning });
 
-    async initStore() {
-      const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
+			invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
+		},
 
-      const localModels = isOllamaRunning
-        ? (await invoke(API.ListModels, undefined)).data?.models.map(model => model.name)
-        : JSON.parse(localStorage.getItem(localModelsKey) ?? "") ?? [];
+		localModels: [] as string[],
 
-      if (isOllamaRunning) localStorage.setItem(localModelsKey, JSON.stringify(localModels));
+		async initStore() {
+			const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
 
-      set(({
-        isOllamaRunning,
-        manageOllama: localStorage.getItem(manageOllamaKey) === "true",
-        localModels
-      }));
-    }
-  };
+			const localModels = isOllamaRunning
+				? (await invoke(API.ListModels, undefined)).data?.models.map(
+						(model) => model.name,
+					)
+				: JSON.parse(localStorage.getItem(localModelsKey) ?? "") ?? [];
+
+			if (isOllamaRunning)
+				localStorage.setItem(localModelsKey, JSON.stringify(localModels));
+
+			set({
+				isOllamaRunning,
+				manageOllama: localStorage.getItem(manageOllamaKey) === "true",
+				localModels,
+			});
+		},
+	};
 });

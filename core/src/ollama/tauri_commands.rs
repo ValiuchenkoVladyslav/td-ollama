@@ -43,7 +43,7 @@ pub fn check_ollama() -> bool {
     }
   }
 
-  return false;
+  false
 }
 
 #[tauri::command(rename_all="snake_case")]

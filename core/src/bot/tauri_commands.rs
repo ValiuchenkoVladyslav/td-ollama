@@ -20,11 +20,12 @@ pub async fn run_bot(state: State<'_, Mutex<AppState>>, token: String, system: S
   Ok(())
 }
 
+#[allow(unused_must_use)]
 #[tauri::command(rename_all="snake_case")]
 pub fn stop_bot(state: State<'_, Mutex<AppState>>, token: String) {
   let running_bots = &mut state.lock().unwrap().running_bots;
   if let Some((shutdown_token, _)) = running_bots.iter().find(|(_, t)| t == &token) {
-    let _ = shutdown_token.shutdown().unwrap();
+    shutdown_token.shutdown();
   }
 
   running_bots.retain(|(_, t)| t != &token);

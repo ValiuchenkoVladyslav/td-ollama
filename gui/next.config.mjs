@@ -1,14 +1,14 @@
 /** @type {import("next").NextConfig} */
 export default {
-  // compile to static
-  output: "export",
+	// compile to static
+	output: "export",
 
-  // build optimizations
-  productionBrowserSourceMaps: false,
+	// build optimizations
+	productionBrowserSourceMaps: false,
 
-  devIndicators: {
-    autoPrerender: false,
-  },
+	devIndicators: {
+		autoPrerender: false,
+	},
 
-  generateEtags: false,
+	generateEtags: false,
 };
