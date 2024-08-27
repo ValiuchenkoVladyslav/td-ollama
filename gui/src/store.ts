@@ -21,7 +21,20 @@ export const useAppStore = create((_set: any) => {
 		setIsOllamaRunning(setRunning: boolean) {
 			set({ isOllamaRunning: setRunning });
 
-			invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
+			invoke(setRunning ? API.StartOllama : API.StopOllama, undefined).then(
+				() => {
+					if (!setRunning) return;
+
+					// update local models cache
+					invoke(API.ListModels, undefined).then((res) => {
+						if (!res.data) return;
+
+						set({ localModels: res.data });
+
+						localStorage.setItem(localModelsKey, JSON.stringify(res.data));
+					});
+				},
+			);
 		},
 
 		localModels: [] as string[],
