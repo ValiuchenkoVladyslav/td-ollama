@@ -1,5 +1,5 @@
 {
-	"name": "tg-llama",
+	"name": "tg-ollama",
 	"private": true,
 	"workspaces": [
 		"./gui/"

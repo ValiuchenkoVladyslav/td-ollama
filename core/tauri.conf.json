@@ -16,8 +16,8 @@
     "frontendDist": "../gui/out/",
     "devUrl": "http://localhost:3000"
   },
-  "productName": "tg-llama",
-  "identifier": "tg-llama",
+  "productName": "tg-ollama",
+  "identifier": "tg-ollama",
   "plugins": {},
   "app": {
     "windows": [
