@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "LICENSE"
       - ".vscode/settings.json"
-      - "**/*.{jpg,jpeg,png,ico,svg}"
+      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
 
   pull_request:
     branches:
@@ -15,7 +15,7 @@ on:
     paths-ignore:
       - "LICENSE"
       - ".vscode/settings.json"
-      - "**/*.{jpg,jpeg,png,ico,svg}"
+      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
 
 jobs:
   check-linting:
