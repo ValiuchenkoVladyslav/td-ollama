@@ -72,7 +72,11 @@ export function BotCard(props: BotCardProps) {
 			return;
 		}
 
-		invoke(API.RunBot, { ...data, system: data.systemPrompt });
+		invoke(API.RunBot, {
+      ...data,
+      system: data.systemPrompt,
+      allowed_ids: JSON.parse(`[${data.allowedIds}]`).map(String),
+    });
 		setIsBotRunning(true);
 	});
 
@@ -135,8 +139,6 @@ export function BotCard(props: BotCardProps) {
 						}}
 						render={({ field }) => (
 							<Select
-								required
-								name={field.name}
 								defaultValue={props.model}
 								onValueChange={field.onChange}
 								disabled={isBotRunning}
@@ -160,12 +162,8 @@ export function BotCard(props: BotCardProps) {
 				</div>
 
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button
-							variant="destructive"
-							className="text-lg"
-							disabled={isBotRunning}
-						>
+					<DropdownMenuTrigger asChild className="text-lg">
+						<Button variant="destructive" disabled={isBotRunning}>
 							DELETE
 						</Button>
 					</DropdownMenuTrigger>
