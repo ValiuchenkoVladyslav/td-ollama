@@ -73,10 +73,10 @@ export function BotCard(props: BotCardProps) {
 		}
 
 		invoke(API.RunBot, {
-      ...data,
-      system: data.systemPrompt,
-      allowed_ids: JSON.parse(`[${data.allowedIds}]`).map(String),
-    });
+			...data,
+			system: data.systemPrompt,
+			allowed_ids: JSON.parse(`[${data.allowedIds}]`).map(String),
+		});
 		setIsBotRunning(true);
 	});
 

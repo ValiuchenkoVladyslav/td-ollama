@@ -1,8 +1,8 @@
+import { SquareChevronRight } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
 import ClientInit from "./_client-init";
 import { OllamaControl } from "./_ollama-control";
 import WindowButtons from "./_window-buttons";
-import { SquareChevronRight } from "lucide-react";
 import "./globals.css";
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
@@ -36,17 +36,15 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 								Additional info
 							</h1>
 							<p className="opacity-70">
-								* Keep in mind ollama api has no option to unload the model,
-                so after stopping the bot it just hangs in memory. Restart
-                ollama server manually to get rid of it.
+								* Keep in mind ollama api has no option to unload the model, so
+								after stopping the bot it just hangs in memory. Restart ollama
+								server manually to get rid of it.
 							</p>
 						</div>
 					</section>
 
 					<section className="bg-white rounded-tl-md flex-1 overflow-y-scroll p-8">
-		        <div className="grid grid-cols-2 gap-8 *:h-[320px]">
-              {children}
-		        </div>
+						<div className="grid grid-cols-2 gap-8 *:h-[320px]">{children}</div>
 					</section>
 				</main>
 			</body>
