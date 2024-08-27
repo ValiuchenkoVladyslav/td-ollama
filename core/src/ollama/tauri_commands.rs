@@ -1,7 +1,6 @@
 use std::sync::Mutex;
 use tauri::State;
 use crate::app_state::AppState;
-use super::api::{self, OllamaModels};
 
 const OLLAMA_PROCESSES: [&str; 3] = [
   "ollama app.exe",
@@ -52,6 +51,8 @@ pub fn set_manage_ollama(state: State<'_, Mutex<AppState>>, manage: bool) {
 }
 
 #[tauri::command(rename_all="snake_case")]
-pub async fn list_models() -> OllamaModels {
-  api::list_models().await
+pub async fn list_models() -> Vec<String> {
+  super::api::list_models().await.models.iter()
+    .map(|model| model.name.clone())
+    .collect()
 }

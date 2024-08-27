@@ -14,7 +14,7 @@ export async function invoke<
 	CommandName extends API,
 	Command extends {
 		[API.RunBot]: {
-			args: { token: string; system: string; model: string };
+			args: { token: string; system: string; model: string; allowed_ids: string[]; };
 			return: void;
 		};
 		[API.StopBot]: {
@@ -40,7 +40,7 @@ export async function invoke<
 		};
 		[API.ListModels]: {
 			args: undefined;
-			return: { models: { name: string }[] };
+			return: string[];
 		};
 	}[CommandName],
 >(
