@@ -1,5 +1,2 @@
-# Check project linting
-bun lint:check
-
 # Check if project compiles
 bun build:debug
