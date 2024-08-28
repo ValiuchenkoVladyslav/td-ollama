@@ -1,4 +1,4 @@
-import { SquareChevronRight } from "lucide-react";
+import { Github, SquareChevronRight } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
 import ClientInit from "./_client-init";
 import { OllamaControl } from "./_ollama-control";
@@ -41,6 +41,16 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 								server manually to get rid of it.
 							</p>
 						</div>
+
+						<a
+							href="https://github.com/ValiuchenkoVladyslav/tg-ollama"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 mt-auto mb-3 opacity-70 hover:opacity-100 duration-300"
+						>
+							<Github size={30} />
+							<span className="text-xl font-semibold">Project GitHub</span>
+						</a>
 					</section>
 
 					<section className="bg-white rounded-tl-md flex-1 overflow-y-scroll p-8">

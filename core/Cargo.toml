@@ -14,6 +14,7 @@ sysinfo = "0.31.2"
 reqwest = { version = "0.12.7", features = ["stream"] }
 futures = "0.3.30"
 bytes = "=1.7.1"
+tauri-plugin-shell = "2.0.0-rc.2"
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-rc.5", features = [] }
