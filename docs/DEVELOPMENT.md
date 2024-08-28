@@ -15,7 +15,7 @@ bun install
 ```sh
 bun dev
 ```
-> It spins up Next.js development server on http://localhost:300 and Tauri app in watch mode configured to listen to it
+> It spins up Next.js development server on http://localhost:3000 and Tauri app in watch mode configured to listen to it
 
 ### Compile for production
 ```sh
