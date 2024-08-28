@@ -54,6 +54,7 @@ export function BotCard(props: BotCardProps) {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError,
 	} = useForm<BotCardData>();
 
 	function updateBotCard(botCard: BotCardProps) {
@@ -75,9 +76,12 @@ export function BotCard(props: BotCardProps) {
 		invoke(API.RunBot, {
 			...data,
 			system: data.systemPrompt,
-			allowed_ids: JSON.parse(`[${data.allowedIds}]`).map(String),
+			allowed_ids: JSON.parse(`[${data.allowedIds}]`),
+		}).then(({ error }) => {
+			if (!error) return setIsBotRunning(true);
+
+			setError("token", { message: "invalid" });
 		});
-		setIsBotRunning(true);
 	});
 
 	return (
