@@ -1,6 +1,4 @@
-use std::sync::Mutex;
-use tauri::State;
-use crate::app_state::AppState;
+use crate::app_state::CommandState;
 
 const OLLAMA_PROCESSES: [&str; 3] = [
   "ollama app.exe",
@@ -46,7 +44,7 @@ pub fn check_ollama() -> bool {
 }
 
 #[tauri::command(rename_all="snake_case")]
-pub fn set_manage_ollama(state: State<'_, Mutex<AppState>>, manage: bool) {
+pub fn set_manage_ollama(state: CommandState, manage: bool) {
   state.lock().unwrap().manage_ollama = manage;
 }
 

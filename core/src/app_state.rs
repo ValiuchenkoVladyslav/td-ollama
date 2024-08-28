@@ -29,3 +29,5 @@ impl AppState {
     }
   }
 }
+
+pub type CommandState<'s> = tauri::State<'s, std::sync::Mutex<AppState>>;

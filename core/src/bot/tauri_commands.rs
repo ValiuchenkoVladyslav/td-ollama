@@ -1,18 +1,17 @@
-use std::sync::Mutex;
-use tauri::State;
-use crate::app_state::AppState;
-use teloxide::{dispatching::UpdateFilterExt, dptree, prelude::Dispatcher, types::Update, Bot};
-use super::handlers::{handle_message, BotChats};
+use crate::app_state::CommandState;
 
 #[tauri::command(rename_all="snake_case")]
-pub async fn run_bot(state: State<'_, Mutex<AppState>>, token: String, system: String, model: String, allowed_ids: Vec<String>) -> Result<(), ()> {
+pub async fn run_bot(state: CommandState<'_>, token: String, system: String, model: String, allowed_ids: Vec<String>) -> Result<(), ()> {
+  use teloxide::{self as tl, dispatching::{UpdateFilterExt, Dispatcher}};
+  use super::handlers::{handle_message, BotChats};
+
   let mut dispatcher = Dispatcher::builder(
-    Bot::new(&token),
-    Update::filter_message().endpoint(
+    tl::Bot::new(&token),
+    tl::types::Update::filter_message().endpoint(
       move |bot, chats, msg| handle_message(bot, chats, msg, system.clone(), allowed_ids.clone(), model.clone())
     )
   )
-    .dependencies(dptree::deps![BotChats::default()])
+    .dependencies(tl::dptree::deps![BotChats::default()])
     .build();
 
   state.lock().unwrap().running_bots.push((dispatcher.shutdown_token(), token));
@@ -24,7 +23,7 @@ pub async fn run_bot(state: State<'_, Mutex<AppState>>, token: String, system: S
 
 #[allow(unused_must_use)]
 #[tauri::command(rename_all="snake_case")]
-pub fn stop_bot(state: State<'_, Mutex<AppState>>, token: String) {
+pub fn stop_bot(state: CommandState, token: String) {
   let running_bots = &mut state.lock().unwrap().running_bots;
   if let Some((shutdown_token, _)) = running_bots.iter().find(|(_, t)| t == &token) {
     shutdown_token.shutdown();
