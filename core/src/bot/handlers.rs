@@ -1,16 +1,16 @@
 use std::sync::{Arc, Mutex};
 use futures::StreamExt;
-use teloxide::prelude::{Bot, Message, Requester};
+use teloxide::{prelude::{Bot, Message, Requester}, types};
 use crate::ollama::api::{ChatStream, Role, OllamaMessage};
 
-pub type BotChats = Arc<Mutex<Vec<(teloxide::types::ChatId, Vec<OllamaMessage>)>>>;
+pub type BotChats = Arc<Mutex<Vec<(types::ChatId, Vec<OllamaMessage>)>>>;
 
 pub async fn handle_message(
   bot: Bot,
   bot_chats: BotChats,
   msg: Message,
   system: String,
-  allowed_ids: Vec<String>,
+  allowed_ids: Vec<types::UserId>,
   model: String,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
   let chat_id = msg.chat.id;
@@ -19,7 +19,7 @@ pub async fn handle_message(
     return Ok(()); // Ignore non-text messages and channels
   };
 
-  if !allowed_ids.contains(&message_author.id.to_string()) {
+  if !allowed_ids.contains(&message_author.id) {
     return Ok(()); // Ignore messages from not allowed users
   }
 
@@ -49,12 +49,12 @@ pub async fn handle_message(
     counter += 1;
     final_text.push_str(&res.message.content);
 
-    if counter % 7 == 0 { // in order to avoid telegram rate limits
+    if counter % 2 == 0 { // in order to avoid telegram rate limits
       bot.edit_message_text(chat_id, msg_id, &final_text).await?;
     }
   }
 
-  if counter % 7 != 0 { // append missing final part if it exists
+  if counter % 2 != 0 { // append missing final part if it exists
     bot.edit_message_text(chat_id, msg_id, &final_text).await?;
   }
 

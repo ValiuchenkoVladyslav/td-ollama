@@ -1,5 +1,7 @@
 use serde::{Serialize, Deserialize};
 use reqwest::Client;
+use std::pin::Pin;
+use futures::{task::{Context, Poll}, stream::Stream};
 
 const OLLAMA_URL: &str = "http://localhost:11434/api/";
 
@@ -21,10 +23,6 @@ pub struct OllamaMessage {
 pub struct OllamaResponse {
   pub message: OllamaMessage,
 }
-
-use futures::stream::Stream;
-use std::pin::Pin;
-use futures::task::{Context, Poll};
 
 pub struct ChatStream {
   inner: Pin<Box<dyn Stream<Item = Result<bytes::Bytes, reqwest::Error>> + Send + Unpin>>,
@@ -68,8 +66,6 @@ pub struct OllamaModels {
 }
 
 pub async fn list_models() -> OllamaModels {
-  let res = reqwest::get(format!("{OLLAMA_URL}tags"))
-    .await.unwrap().text().await.unwrap();
-
-  serde_json::from_str(&res).unwrap()
+  reqwest::get(format!("{OLLAMA_URL}tags"))
+    .await.unwrap().json().await.unwrap()
 }
