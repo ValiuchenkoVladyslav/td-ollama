@@ -22,23 +22,39 @@ pub struct OllamaResponse {
   pub message: OllamaMessage,
 }
 
-pub async fn chat(system: String, mut messages: Vec<OllamaMessage>, model: String) -> OllamaResponse {
-  messages.insert(0, OllamaMessage {
-    role: Role::System,
-    content: system,
-  });
+use futures::stream::Stream;
+use std::pin::Pin;
+use futures::task::{Context, Poll};
 
-  let res = Client::new().post(format!("{OLLAMA_URL}chat")).body(
-    serde_json::json!({
-      "model": model,
-      "messages": messages,
-      "stream": false,
-    }).to_string()
-  ).send().await.unwrap().text().await.unwrap();
+pub struct ChatStream {
+  inner: Pin<Box<dyn Stream<Item = Result<bytes::Bytes, reqwest::Error>> + Send + Unpin>>,
+}
 
-  println!("{}", res);
+impl ChatStream {
+  pub async fn new(messages: Vec<OllamaMessage>, model: String) -> Self {
+    let res = Client::new().post(format!("{OLLAMA_URL}chat")).body(
+      serde_json::json!({
+        "model": model,
+        "messages": messages,
+      }).to_string()
+    ).send().await.unwrap().bytes_stream();
 
-  serde_json::from_str(&res).unwrap()
+    Self { inner: Box::pin(res) }
+  }
+}
+
+impl Stream for ChatStream {
+  type Item = OllamaResponse;
+
+  fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+    match self.get_mut().inner.as_mut().poll_next(cx) {
+      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(
+        Some(serde_json::from_slice::<OllamaResponse>(&bytes).unwrap())
+      ),
+      Poll::Ready(None) | Poll::Ready(Some(Err(_))) => Poll::Ready(None),
+      Poll::Pending => Poll::Pending,
+    }
+  }
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -52,8 +68,8 @@ pub struct OllamaModels {
 }
 
 pub async fn list_models() -> OllamaModels {
-  let res = Client::new().get(format!("{OLLAMA_URL}tags"))
-    .send().await.unwrap().text().await.unwrap();
+  let res = reqwest::get(format!("{OLLAMA_URL}tags"))
+    .await.unwrap().text().await.unwrap();
 
   serde_json::from_str(&res).unwrap()
 }
