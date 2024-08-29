@@ -1,0 +1,38 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
+
+	"files": {
+		"include": [
+			"./src/**/*",
+			"next.config.mjs",
+			"postcss.config.mjs",
+			"tailwind.config.ts"
+		]
+	},
+
+	"organizeImports": {
+		"enabled": true
+	},
+
+	"linter": {
+		"rules": {
+			"recommended": true,
+
+			"a11y": {
+				"noSvgWithoutTitle": "off"
+			},
+			"suspicious": {
+				"noConfusingVoidType": "off"
+			},
+			"style": {
+				"useTemplate": "off",
+				"noNonNullAssertion": "off"
+			}
+		}
+	},
+
+	"formatter": {
+		"indentStyle": "tab",
+		"lineEnding": "crlf"
+	}
+}
