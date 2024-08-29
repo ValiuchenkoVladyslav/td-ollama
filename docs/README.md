@@ -13,8 +13,9 @@ _An app that allows you to manage AI powered Telegram chatbots_
 - **Autostart & stop Ollama with this app**
 - **Start & stop Ollama manually**
 - **Chat history for models supported**
+- **Streaming responses supported**
 - **Bot presets are stored between sessions**
-## 🤖 Bot features
+## 🤖 Bot-preset features
 - **Create bots from your own tokens**
 - **Limit bot access by user IDs**
 - **Set system prompt**
