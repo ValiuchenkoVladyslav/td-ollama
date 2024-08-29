@@ -18,7 +18,7 @@ export async function invoke<
 				token: string;
 				system: string;
 				model: string;
-				allowed_ids: string[];
+				allowed_ids: number[];
 			};
 			return: void;
 		};

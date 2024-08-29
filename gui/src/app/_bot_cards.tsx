@@ -27,23 +27,22 @@ import { useAppStore } from "~/store";
 
 type BotCardData = {
 	token: string;
-	allowedIds: string;
-	systemPrompt: string;
+	allowed_ids: string;
+	system: string;
 	model: string;
-};
-
-type BotCardProps = BotCardData & {
-	cardKey: string;
+	cardKey: number;
 };
 
 const BotCardsContext = createContext(
 	{} as {
-		botCards: BotCardProps[];
-		setBotCards: React.Dispatch<React.SetStateAction<BotCardProps[]>>;
+		botCards: BotCardData[];
+		setBotCards: React.Dispatch<React.SetStateAction<BotCardData[]>>;
 	},
 );
 
-export function BotCard(props: BotCardProps) {
+const botCardsKey = "botcards";
+
+export function BotCard(props: BotCardData) {
 	const { setBotCards } = useContext(BotCardsContext);
 	const [isBotRunning, setIsBotRunning] = useState(false);
 	const isOllamaRunning = useAppStore((state) => state.isOllamaRunning);
@@ -57,33 +56,40 @@ export function BotCard(props: BotCardProps) {
 		setError,
 	} = useForm<BotCardData>();
 
-	function updateBotCard(botCard: BotCardProps) {
-		localStorage.setItem(props.cardKey, JSON.stringify(botCard));
-		setBotCards((prevBotCards) =>
-			prevBotCards.map((card) =>
-				card.cardKey === props.cardKey ? botCard : card,
-			),
-		);
+	function updateBotCard(botCard: BotCardData) {
+		setBotCards((prevBotCards) => {
+			prevBotCards[
+				prevBotCards.findIndex((card) => card.cardKey === botCard.cardKey)
+			] = botCard;
+			localStorage.setItem(botCardsKey, JSON.stringify(prevBotCards));
+
+			return [...prevBotCards];
+		});
 	}
 
 	const submitBotData = handleSubmit((data) => {
 		if (isBotRunning) {
 			invoke(API.StopBot, { token: data.token });
-			setIsBotRunning(false);
-			return;
+			return setIsBotRunning(false);
+		}
+
+		const allowed_ids = data.allowed_ids.split(",").map(Number);
+
+		for (const id of allowed_ids) {
+			if (Number.isNaN(id))
+				return setError("allowed_ids", { message: "invalid" });
 		}
 
 		invoke(API.RunBot, {
 			...data,
-			system: data.systemPrompt,
-			allowed_ids: JSON.parse(`[${data.allowedIds}]`),
+			allowed_ids,
 		}).then(({ error }) => {
 			if (!error) return setIsBotRunning(true);
 
 			setError("token", { message: "invalid" });
 		});
 	});
-
+	console.log(errors);
 	return (
 		<form
 			onSubmit={submitBotData}
@@ -105,10 +111,11 @@ export function BotCard(props: BotCardProps) {
 				placeholder="Allowed IDs (comma separated)"
 				disabled={isBotRunning}
 				autoComplete="off"
-				defaultValue={props.allowedIds}
-				{...register("allowedIds", {
+				className={errors.allowed_ids && "border-red-600"}
+				defaultValue={props.allowed_ids}
+				{...register("allowed_ids", {
 					onChange: ({ target }) =>
-						updateBotCard({ ...props, allowedIds: target.value }),
+						updateBotCard({ ...props, allowed_ids: target.value }),
 				})}
 			/>
 
@@ -116,10 +123,10 @@ export function BotCard(props: BotCardProps) {
 				className="h-full resize-none"
 				placeholder="System prompt"
 				disabled={isBotRunning}
-				defaultValue={props.systemPrompt}
-				{...register("systemPrompt", {
+				defaultValue={props.system}
+				{...register("system", {
 					onChange: ({ target }) =>
-						updateBotCard({ ...props, systemPrompt: target.value }),
+						updateBotCard({ ...props, system: target.value }),
 				})}
 			/>
 
@@ -188,12 +195,17 @@ export function BotCard(props: BotCardProps) {
 								className="text-lg"
 								size="sm"
 								onClick={() => {
-									localStorage.removeItem(props.cardKey);
-									setBotCards((prevBotCards) =>
-										prevBotCards.filter(
-											(card) => card.cardKey !== props.cardKey,
-										),
-									);
+									setBotCards((prevBotCards) => {
+										const updatedBotCards = prevBotCards.filter(
+											({ cardKey }) => cardKey !== props.cardKey,
+										);
+										localStorage.setItem(
+											botCardsKey,
+											JSON.stringify(updatedBotCards),
+										);
+
+										return updatedBotCards;
+									});
 								}}
 							>
 								DELETE
@@ -209,35 +221,17 @@ export function BotCard(props: BotCardProps) {
 	);
 }
 
-let highestIndex = 0;
-const botCardPrefix = "botcard-";
-
 export function BotCardsList() {
-	const [botCards, setBotCards] = useState<BotCardProps[]>([]);
+	const [botCards, setBotCards] = useState<BotCardData[]>([]);
 
 	useEffect(() => {
-		const parsedBotCards: BotCardProps[] = [];
-		for (const key of Object.keys(localStorage)) {
-			if (!key.startsWith(botCardPrefix)) continue;
-
-			const botCardIndex = +key.split("-").pop()!;
-			if (botCardIndex > highestIndex) highestIndex = botCardIndex;
-
-			const parsedCard = JSON.parse(localStorage.getItem(key)!);
-			parsedCard.cardKey = key;
-
-			parsedBotCards.push(parsedCard);
-		}
-
-		setBotCards(parsedBotCards);
+		setBotCards(JSON.parse(localStorage.getItem(botCardsKey) ?? "[]"));
 	}, []);
 
 	return (
 		<BotCardsContext.Provider value={{ botCards, setBotCards }}>
 			{botCards
-				.sort((a, b) =>
-					+a.cardKey.split("-").pop()! > +b.cardKey.split("-").pop()! ? 1 : -1,
-				)
+				.sort((a, b) => a.cardKey - b.cardKey)
 				.map((card) => (
 					<BotCard key={card.cardKey} {...card} />
 				))}
@@ -246,18 +240,23 @@ export function BotCardsList() {
 				type="button"
 				className="bg-slate-950 hover:opacity-95 duration-300 rounded-xl flex items-center justify-center gap-2"
 				onClick={() => {
-					highestIndex += 1;
+					let highestIndex = 0;
 
-					const newBotCard: BotCardProps = {
+					for (const { cardKey } of botCards) {
+						if (cardKey > highestIndex) highestIndex = cardKey;
+					}
+
+					botCards.push({
 						token: "",
-						allowedIds: "",
-						systemPrompt: "",
+						allowed_ids: "",
+						system: "",
 						model: "",
-						cardKey: botCardPrefix + highestIndex,
-					};
+						cardKey: highestIndex + 1,
+					});
 
-					localStorage.setItem(newBotCard.cardKey, JSON.stringify(newBotCard));
-					setBotCards([...botCards, newBotCard]);
+					localStorage.setItem(botCardsKey, JSON.stringify(botCards));
+
+					setBotCards([...botCards]);
 				}}
 			>
 				<Plus size={46} />
