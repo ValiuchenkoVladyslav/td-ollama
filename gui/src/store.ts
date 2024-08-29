@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { ollamaErrorToast } from "./components/ollama-error-toast";
 import { API, invoke } from "./core-api";
 
 const manageOllamaKey = "manageOllama";
@@ -19,11 +20,14 @@ export const useAppStore = create((_set: any) => {
 
 		isOllamaRunning: false,
 		async setIsOllamaRunning(setRunning: boolean) {
+			if (!setRunning) {
+				return await invoke(API.StopOllama, undefined);
+			}
+
+			const status = await invoke(API.StartOllama, undefined);
+			if (status.error) return ollamaErrorToast();
+
 			set({ isOllamaRunning: setRunning });
-
-			await invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
-
-			if (!setRunning) return;
 
 			// update local models cache
 			const { data } = await invoke(API.ListModels, undefined);
@@ -47,6 +51,10 @@ export const useAppStore = create((_set: any) => {
 			});
 
 			const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
+
+			if (manageOllama && !isOllamaRunning) {
+				ollamaErrorToast();
+			}
 
 			set({ isOllamaRunning });
 

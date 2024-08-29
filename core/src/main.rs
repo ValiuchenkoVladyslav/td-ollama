@@ -15,7 +15,7 @@ fn main() {
       let app_state = AppState::load(app.app_handle());
 
       if app_state.manage_ollama {
-        ollama::tauri_commands::start_ollama();
+        let _ = ollama::tauri_commands::start_ollama();
       }
 
       app.manage(Mutex::new(app_state));

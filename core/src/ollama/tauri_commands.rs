@@ -7,14 +7,18 @@ const OLLAMA_PROCESSES: [&str; 3] = [
 ];
 
 #[tauri::command(rename_all="snake_case")]
-pub fn start_ollama() {
+pub fn start_ollama() -> Result<(), ()> {
   use std::os::windows::process::CommandExt;
 
-  std::process::Command::new("ollama")
+  let res = std::process::Command::new("ollama")
     .arg("serve")
     .creation_flags(0x08000000) // CREATE_NO_WINDOW
-    .spawn()
-    .unwrap();
+    .spawn();
+
+  match res {
+    Ok(_) => Ok(()),
+    Err(_) => Err(()),
+  }
 }
 
 #[tauri::command(rename_all="snake_case")]

@@ -1,5 +1,6 @@
 import { Github, SquareChevronRight } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
+import { Toaster } from "~/components/ui/sonner";
 import ClientInit from "./_client-init";
 import { OllamaControl } from "./_ollama-control";
 import WindowButtons from "./_window-buttons";
@@ -57,6 +58,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 						<div className="grid grid-cols-2 gap-8 *:h-[320px]">{children}</div>
 					</section>
 				</main>
+
+				<Toaster />
 			</body>
 		</html>
 	);
