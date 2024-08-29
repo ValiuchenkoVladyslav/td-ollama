@@ -9,6 +9,9 @@ _An app that allows you to manage AI powered Telegram chatbots_
 ## 🎀 Better take a look at catgirl example!~
 > https://github.com/user-attachments/assets/038a9257-7d12-4cfd-8ac8-5551fd53ed9a
 
+## 💓 Download
+### [You can find installation instructions and download the installer in latest release](https://github.com/ValiuchenkoVladyslav/tg-ollama/releases)
+
 ## ⚙️ General features
 - **Autostart & stop Ollama with this app**
 - **Start & stop Ollama manually**
