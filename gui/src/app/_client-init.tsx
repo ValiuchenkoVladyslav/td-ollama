@@ -1,10 +1,14 @@
 "use client";
 
 import { useAppStore } from "~/store";
+import { botCardsKey, useBotCards } from "./_bot_cards";
 
 if (typeof window !== "undefined") {
 	// init store on client side
 	useAppStore.getState().initStore();
+	useBotCards
+		.getState()
+		.setBotCards(JSON.parse(localStorage.getItem(botCardsKey) ?? "[]"));
 
 	// disable some browser features so app feels more native
 	if (process.env.NODE_ENV !== "development") {

@@ -1,8 +1,9 @@
 "use client";
 
 import { Ban, Play, Plus } from "lucide-react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { create } from "zustand";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -33,17 +34,23 @@ type BotCardData = {
 	cardKey: number;
 };
 
-const BotCardsContext = createContext(
-	{} as {
-		botCards: BotCardData[];
-		setBotCards: React.Dispatch<React.SetStateAction<BotCardData[]>>;
-	},
-);
+export const botCardsKey = "botcards";
 
-const botCardsKey = "botcards";
+// biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
+export const useBotCards = create((_set: any) => {
+	const set: (typeof useBotCards)["setState"] = _set;
+
+	return {
+		botCards: [] as BotCardData[],
+		setBotCards(botCards: BotCardData[]) {
+			localStorage.setItem(botCardsKey, JSON.stringify(botCards));
+			set({ botCards });
+		},
+	};
+});
 
 export function BotCard(props: BotCardData) {
-	const { setBotCards } = useContext(BotCardsContext);
+	const { botCards, setBotCards } = useBotCards();
 	const [isBotRunning, setIsBotRunning] = useState(false);
 	const isOllamaRunning = useAppStore((state) => state.isOllamaRunning);
 	const localModels = useAppStore((state) => state.localModels);
@@ -57,14 +64,10 @@ export function BotCard(props: BotCardData) {
 	} = useForm<BotCardData>();
 
 	function updateBotCard(botCard: BotCardData) {
-		setBotCards((prevBotCards) => {
-			prevBotCards[
-				prevBotCards.findIndex((card) => card.cardKey === botCard.cardKey)
-			] = botCard;
-			localStorage.setItem(botCardsKey, JSON.stringify(prevBotCards));
+		botCards[botCards.findIndex((card) => card.cardKey === botCard.cardKey)] =
+			botCard;
 
-			return [...prevBotCards];
-		});
+		setBotCards(botCards);
 	}
 
 	const submitBotData = handleSubmit((data) => {
@@ -194,19 +197,11 @@ export function BotCard(props: BotCardData) {
 								variant="destructive"
 								className="text-lg"
 								size="sm"
-								onClick={() => {
-									setBotCards((prevBotCards) => {
-										const updatedBotCards = prevBotCards.filter(
-											({ cardKey }) => cardKey !== props.cardKey,
-										);
-										localStorage.setItem(
-											botCardsKey,
-											JSON.stringify(updatedBotCards),
-										);
-
-										return updatedBotCards;
-									});
-								}}
+								onClick={() =>
+									setBotCards(
+										botCards.filter(({ cardKey }) => cardKey !== props.cardKey),
+									)
+								}
 							>
 								DELETE
 							</Button>
@@ -222,14 +217,10 @@ export function BotCard(props: BotCardData) {
 }
 
 export function BotCardsList() {
-	const [botCards, setBotCards] = useState<BotCardData[]>([]);
-
-	useEffect(() => {
-		setBotCards(JSON.parse(localStorage.getItem(botCardsKey) ?? "[]"));
-	}, []);
+	const { botCards, setBotCards } = useBotCards();
 
 	return (
-		<BotCardsContext.Provider value={{ botCards, setBotCards }}>
+		<>
 			{botCards
 				.sort((a, b) => a.cardKey - b.cardKey)
 				.map((card) => (
@@ -254,14 +245,12 @@ export function BotCardsList() {
 						cardKey: highestIndex + 1,
 					});
 
-					localStorage.setItem(botCardsKey, JSON.stringify(botCards));
-
-					setBotCards([...botCards]);
+					setBotCards(botCards);
 				}}
 			>
 				<Plus size={46} />
 				<span className="text-3xl font-semibold">ADD BOT PRESET</span>
 			</button>
-		</BotCardsContext.Provider>
+		</>
 	);
 }
