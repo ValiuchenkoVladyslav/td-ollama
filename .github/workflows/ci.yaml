@@ -37,7 +37,7 @@ jobs:
         run: bun install
 
       - name: Check project linting
-        run: bun lint:check
+        run: bun lint
 
   check-compile:
     runs-on: windows-latest
