@@ -39,32 +39,32 @@ pub async fn handle_message(
   });
 
   // Get response from Ollama and send it to telegram
-  let mut res_stream = ChatStream::new(message_history.clone(), model).await;
+  let Ok(mut res_stream) = ChatStream::new(message_history.clone(), model).await else {
+    bot.send_message(chat_id, "ERROR: Failed to connect to Ollama server!").await?;
+    return Ok(());
+  };
 
-  let mut final_text = res_stream.next().await.unwrap().message.content;
-  let msg_id = bot.send_message(chat_id, &final_text).await?.id;
+  let mut ai_response = res_stream.next().await.unwrap().message;
+  let msg_id = bot.send_message(chat_id, &ai_response.content).await?.id;
 
   let mut counter = 0;
   while let Some(res) = res_stream.next().await {
     counter += 1;
-    final_text.push_str(&res.message.content);
+    ai_response.content.push_str(&res.message.content);
 
     if counter % 2 == 0 { // in order to avoid telegram rate limits
-      bot.edit_message_text(chat_id, msg_id, &final_text).await?;
+      bot.edit_message_text(chat_id, msg_id, &ai_response.content).await?;
     }
   }
 
   if counter % 2 != 0 { // append missing final part if it exists
-    bot.edit_message_text(chat_id, msg_id, &final_text).await?;
+    bot.edit_message_text(chat_id, msg_id, &ai_response.content).await?;
   }
 
   // Save new chat messages
   let mut bot_chats = bot_chats.lock().unwrap();
 
-  message_history.push(OllamaMessage {
-    role: Role::Assistant,
-    content: final_text,
-  });
+  message_history.push(ai_response);
 
   if let Some(chat_index) = bot_chats.iter().position(|(id, _)| id == &chat_id) {
     bot_chats[chat_index].1 = message_history;

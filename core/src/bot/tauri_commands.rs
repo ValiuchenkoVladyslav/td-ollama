@@ -20,7 +20,6 @@ pub async fn run_bot(
     .await.unwrap().json::<BotStatus>().await.unwrap();
 
   if !bot_status.ok {
-    println!("Invalid token");
     return Err(());
   }
 
