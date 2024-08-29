@@ -2,7 +2,7 @@
 
 import { Ban, Play, Plus } from "lucide-react";
 import { useReducer } from "react";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { create } from "zustand";
 import { Button } from "~/components/ui/button";
 import {
