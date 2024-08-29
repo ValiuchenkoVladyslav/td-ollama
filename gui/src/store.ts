@@ -21,13 +21,14 @@ export const useAppStore = create((_set: any) => {
 		isOllamaRunning: false,
 		async setIsOllamaRunning(setRunning: boolean) {
 			if (!setRunning) {
+				set({ isOllamaRunning: false });
 				return await invoke(API.StopOllama, undefined);
 			}
 
 			const status = await invoke(API.StartOllama, undefined);
 			if (status.error) return ollamaErrorToast();
 
-			set({ isOllamaRunning: setRunning });
+			set({ isOllamaRunning: true });
 
 			// update local models cache
 			const { data } = await invoke(API.ListModels, undefined);
@@ -46,8 +47,7 @@ export const useAppStore = create((_set: any) => {
 			set({
 				isOllamaRunning: manageOllama, // predictive update
 				manageOllama,
-				localModels:
-					JSON.parse(localStorage.getItem(localModelsKey) ?? "") ?? [],
+				localModels: JSON.parse(localStorage.getItem(localModelsKey) ?? "[]"),
 			});
 
 			const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
