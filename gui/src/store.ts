@@ -18,30 +18,30 @@ export const useAppStore = create((_set: any) => {
 		},
 
 		isOllamaRunning: false,
-		setIsOllamaRunning(setRunning: boolean) {
+		async setIsOllamaRunning(setRunning: boolean) {
 			set({ isOllamaRunning: setRunning });
 
-			invoke(setRunning ? API.StartOllama : API.StopOllama, undefined).then(
-				() => {
-					if (!setRunning) return;
+			await invoke(setRunning ? API.StartOllama : API.StopOllama, undefined);
 
-					// update local models cache
-					invoke(API.ListModels, undefined).then((res) => {
-						if (!res.data) return;
+			if (!setRunning) return;
 
-						set({ localModels: res.data });
+			// update local models cache
+			const { data } = await invoke(API.ListModels, undefined);
+			if (!data) return;
 
-						localStorage.setItem(localModelsKey, JSON.stringify(res.data));
-					});
-				},
-			);
+			set({ localModels: data });
+
+			localStorage.setItem(localModelsKey, JSON.stringify(data));
 		},
 
 		localModels: [] as string[],
 
 		async initStore() {
+			const manageOllama = localStorage.getItem(manageOllamaKey) === "true";
+
 			set({
-				manageOllama: localStorage.getItem(manageOllamaKey) === "true",
+				isOllamaRunning: manageOllama, // predictive update
+				manageOllama,
 				localModels:
 					JSON.parse(localStorage.getItem(localModelsKey) ?? "") ?? [],
 			});
