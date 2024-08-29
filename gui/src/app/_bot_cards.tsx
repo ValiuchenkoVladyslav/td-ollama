@@ -1,8 +1,8 @@
 "use client";
 
 import { Ban, Play, Plus } from "lucide-react";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useReducer } from "react";
+import { Controller, set, useForm } from "react-hook-form";
 import { create } from "zustand";
 import { Button } from "~/components/ui/button";
 import {
@@ -41,6 +41,10 @@ export const useBotCards = create((_set: any) => {
 	const set: (typeof useBotCards)["setState"] = _set;
 
 	return {
+		runningBots: 0,
+		setRunningBots(runningBots: number) {
+			set({ runningBots });
+		},
 		botCards: [] as BotCardData[],
 		setBotCards(botCards: BotCardData[]) {
 			localStorage.setItem(botCardsKey, JSON.stringify(botCards));
@@ -50,10 +54,16 @@ export const useBotCards = create((_set: any) => {
 });
 
 export function BotCard(props: BotCardData) {
-	const { botCards, setBotCards } = useBotCards();
-	const [isBotRunning, setIsBotRunning] = useState(false);
+	const { botCards, setBotCards, runningBots, setRunningBots } = useBotCards();
 	const isOllamaRunning = useAppStore((state) => state.isOllamaRunning);
 	const localModels = useAppStore((state) => state.localModels);
+	const [isBotRunning, setIsBotRunning] = useReducer(
+		(_: boolean, runBot: boolean) => {
+			setRunningBots(runningBots + (runBot ? 1 : -1));
+			return runBot;
+		},
+		false,
+	);
 
 	const {
 		control,
@@ -92,7 +102,7 @@ export function BotCard(props: BotCardData) {
 			setError("token", { message: "invalid" });
 		});
 	});
-	console.log(errors);
+
 	return (
 		<form
 			onSubmit={submitBotData}
@@ -158,8 +168,7 @@ export function BotCard(props: BotCardData) {
 								disabled={isBotRunning}
 							>
 								<SelectTrigger
-									aria-invalid={!!errors.model}
-									className="w-[140px] aria-[invalid=true]:border-red-600"
+									className={"w-[140px] " + (errors.model && "border-red-600")}
 								>
 									<SelectValue placeholder="Model" />
 								</SelectTrigger>
