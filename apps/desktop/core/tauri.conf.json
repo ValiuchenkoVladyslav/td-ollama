@@ -8,9 +8,8 @@
     ]
   },
   "build": {
-    "beforeDevCommand": "bun --cwd gui next-dev",
-    "beforeBuildCommand": "bun --cwd gui next-build",
-    "frontendDist": "../gui/out/",
+    "beforeDevCommand": "bun run next dev",
+    "frontendDist": "../out/",
     "devUrl": "http://localhost:3000"
   },
   "productName": "tg-ollama",

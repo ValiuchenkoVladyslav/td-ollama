@@ -2,19 +2,22 @@
 **/node_modules/
 
 # Next.js
-gui/.next/
-gui/next-env.d.ts
-gui/out/
+**/.next/
+**/next-env.d.ts
+**/out/
 
 # Cargo
-core/target/
+apps/desktop/core/target/
 
 # Tauri generated
-core/gen/
+apps/desktop/core/gen/
 
 # Editor config
 .vscode/*
 !.vscode/settings.json
+
+# Turborepo
+**/.turbo/
 
 # envs
 .env

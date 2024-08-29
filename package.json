@@ -1,19 +1,22 @@
 {
-	"name": "tg-ollama",
-	"private": true,
-	"workspaces": [
-		"./gui/"
-	],
-	"scripts": {
-		"dev": "tauri dev -c core/tauri.conf.json",
-		"build:debug": "tauri build -c core/tauri.conf.json -d",
-		"build:prod": "tauri build -c core/tauri.conf.json",
-		"lint:check": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps && bun --cwd ./gui lint:check",
-		"lint:fix": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps --fix --allow-dirty --allow-staged && bun --cwd ./gui lint:fix",
-		"prepare": "husky"
-	},
-	"devDependencies": {
-		"@tauri-apps/cli": "^2.0.0-rc.6",
-		"husky": "^9.1.5"
-	}
+  "name": "tg-ollama",
+  "private": true,
+  "workspaces": [
+    "./apps/desktop"
+  ],
+  "packageManager": "bun@1.1.22",
+  "scripts": {
+    "build": "turbo build",
+    "build:debug": "turbo build:debug",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "dev:desktop": "bun --cwd ./apps/desktop dev"
+  },
+  "devDependencies": {
+    "husky": "^9.1.5",
+    "turbo": "^2.1.0"
+  },
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }

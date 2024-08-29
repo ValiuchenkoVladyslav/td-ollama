@@ -1,0 +1,27 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "next-build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [
+        "core/target/release/tg-ollama-core.exe",
+        "core/target/release/bundle/msi/*.msi"
+      ]
+    },
+    "build:debug": {
+      "dependsOn": ["^build:debug", "next-build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [
+        "core/target/debug/tg-ollama-core.exe"
+      ]
+    },
+    "next-build": {
+      "dependsOn": ["^next-build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [
+        "out/**"
+      ]
+    }
+  }
+}
