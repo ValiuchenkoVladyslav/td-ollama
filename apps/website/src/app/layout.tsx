@@ -1,12 +1,6 @@
-import type { Metadata } from "next";
-import "./globals.css";
 import { Github } from "lucide-react";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "TG-OLLAMA",
-	description: "An app that allows you to manage AI powered Telegram chatbots",
-};
+import "./globals.css";
 
 export default function RootLayout({
 	children,
@@ -15,13 +9,17 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<head>
+				<link rel="icon" href="./icon.png" sizes="any" />
+			</head>
+
 			<body className="flex flex-col min-h-screen bg-black text-white">
 				<header className="vertical-line">
 					<Link
 						href="/"
 						className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-600"
 					>
-						{String(metadata.title)}
+						TG-OLLAMA
 					</Link>
 
 					<nav>123</nav>

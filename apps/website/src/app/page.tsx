@@ -1,3 +1,7 @@
+import { createMetadata } from "~/lib";
+
+export const metadata = createMetadata("Download");
+
 export default function Home() {
 	return (
 		<div className="flex items-center justify-center gap-8">
