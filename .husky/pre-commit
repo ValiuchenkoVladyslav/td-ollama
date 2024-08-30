@@ -1,2 +1,5 @@
 # Check project linting
-bun lint
+bun lint:fix
+
+# Readd staged files
+git add $(git diff --name-only --cached)
