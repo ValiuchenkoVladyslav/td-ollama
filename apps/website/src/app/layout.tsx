@@ -22,8 +22,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					>
 						TG-OLLAMA
 					</Link>
-
-					<nav>123</nav>
 				</header>
 
 				<main className="flex-1 flex *:flex-1">{children}</main>
