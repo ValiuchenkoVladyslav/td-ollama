@@ -9,7 +9,7 @@ export default function Home() {
 		<div className="flex items-center justify-center px-8">
 			<div className="flex flex-wrap gap-x-8 gap-y-4 justify-center">
 				<video
-					className="md:w-[740px]"
+					className="md:w-[740px] h-[417px]"
 					controls
 					loop
 					muted
