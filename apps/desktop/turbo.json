@@ -5,15 +5,16 @@
       "dependsOn": ["^build", "next-build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
-        "core/target/release/tg-ollama-core.exe",
-        "core/target/release/bundle/msi/*.msi"
+        "core/target/release/bundle/**/*",
+        "!core/target/release/bundle/appimage/**/*",
+        "core/target/x86_64-apple-darwin/release/bundle/**/*"
       ]
     },
     "build:debug": {
       "dependsOn": ["^build:debug", "next-build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
-        "core/target/debug/tg-ollama-core.exe"
+        "core/target/debug/*.exe"
       ]
     },
     "next-build": {

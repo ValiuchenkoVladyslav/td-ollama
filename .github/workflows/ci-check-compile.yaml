@@ -47,7 +47,7 @@ jobs:
       - name: Archive compiled for windows
         uses: actions/upload-artifact@v4
         with:
-          name: windows-compiled-msi
+          name: windows-compiled-msi-nsis
           path: apps/desktop/core/target/release/bundle/**/*
 
   check-compile-ubuntu:
@@ -79,8 +79,10 @@ jobs:
       - name: Archive compiled for linux
         uses: actions/upload-artifact@v4
         with:
-          name: linux-compiled-rpm-deb-appimg
-          path: apps/desktop/core/target/release/bundle/**/*
+          name: linux-compiled-rpm-deb
+          path: |
+            apps/desktop/core/target/release/bundle/**/*
+            !apps/desktop/core/target/release/bundle/appimage
 
   check-compile-macos:
     runs-on: macos-latest
