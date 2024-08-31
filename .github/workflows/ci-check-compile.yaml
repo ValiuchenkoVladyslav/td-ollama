@@ -42,7 +42,13 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun build:debug
+        run: bun run build
+
+      - name: Archive compiled for windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-compiled
+          path: apps/desktop/core/target/release/*/
 
   check-compile-ubuntu:
     runs-on: ubuntu-latest
@@ -68,7 +74,13 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun build:debug
+        run: bun run build
+
+      - name: Archive compiled for ubuntu
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-compiled
+          path: apps/desktop/core/target/release/*/
 
   check-compile-macos:
     runs-on: macos-latest
@@ -89,4 +101,10 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun build:debug
+        run: bun run build
+
+      - name: Archive compiled for macos
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-compiled
+          path: apps/desktop/core/target/release/*/
