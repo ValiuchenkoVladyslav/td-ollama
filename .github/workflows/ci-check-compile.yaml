@@ -59,6 +59,11 @@ jobs:
           components: clippy
           toolchain: nightly
 
+      - run: sudo apt-get update
+
+      - name: Install Tauri prerequisites
+        run: sudo apt-get install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
       - name: Install bun dependencies
         run: bun install
 
