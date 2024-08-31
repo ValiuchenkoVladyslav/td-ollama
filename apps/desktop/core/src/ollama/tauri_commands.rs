@@ -1,21 +1,25 @@
 use crate::app_state::CommandState;
 
-const OLLAMA_PROCESSES: [&str; 3] = [
-  "ollama app.exe",
-  "ollama.exe",
-  "ollama_llama_server.exe"
-];
-
+#[cfg(target_os="windows")]
 #[tauri::command(rename_all="snake_case")]
 pub fn start_ollama() -> Result<(), ()> {
   use std::os::windows::process::CommandExt;
 
-  let res = std::process::Command::new("ollama")
+  let cmd = std::process::Command::new("ollama")
     .arg("serve")
     .creation_flags(0x08000000) // CREATE_NO_WINDOW
     .spawn();
 
-  match res {
+  match cmd {
+    Ok(_) => Ok(()),
+    Err(_) => Err(()),
+  }
+}
+
+#[cfg(not(target_os="windows"))]
+#[tauri::command(rename_all="snake_case")]
+pub fn start_ollama() -> Result<(), ()> {
+  match std::process::Command::new("ollama").arg("serve").spawn() {
     Ok(_) => Ok(()),
     Err(_) => Err(()),
   }
@@ -26,8 +30,9 @@ pub fn stop_ollama() {
   let mut system = sysinfo::System::new();
   system.refresh_processes(sysinfo::ProcessesToUpdate::All);
 
-  for ollama_process in OLLAMA_PROCESSES {
-    for process in system.processes_by_name(ollama_process.as_ref()) {
+  for process in system.processes().values() {
+    let process_name = process.name().to_string_lossy();
+    if process_name.contains("ollama") && !process_name.contains("tg-ollama") {
       process.kill();
     }
   }
@@ -38,8 +43,9 @@ pub fn check_ollama() -> bool {
   let mut system = sysinfo::System::new();
   system.refresh_processes(sysinfo::ProcessesToUpdate::All);
 
-  for ollama_process in OLLAMA_PROCESSES {
-    if system.processes_by_name(ollama_process.as_ref()).next().is_some() {
+  for process in system.processes().values() {
+    let process_name = process.name().to_string_lossy();
+    if process_name.contains("ollama") && !process_name.contains("tg-ollama") {
       return true;
     }
   }
