@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-compiled
-          path: apps/desktop/core/target/release/*/
+          path: apps/desktop/core/target/release/*.exe apps/desktop/core/target/release/bundle/msi/*.msi
 
   check-compile-ubuntu:
     runs-on: ubuntu-latest
@@ -76,11 +76,11 @@ jobs:
       - name: Check if project compiles
         run: bun run build
 
-      - name: Archive compiled for ubuntu
+      - name: Archive compiled for linux
         uses: actions/upload-artifact@v4
         with:
-          name: ubuntu-compiled
-          path: apps/desktop/core/target/release/*/
+          name: linux-compiled-rpm-deb-appimg
+          path: apps/desktop/core/target/release/bundle/
 
   check-compile-macos:
     runs-on: macos-latest
@@ -101,10 +101,10 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun run build
+        run: bun run --cwd apps/desktop next-build && bun run --cwd apps/desktop build --target=x86_64-apple-darwin
 
-      - name: Archive compiled for macos
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-compiled
-          path: apps/desktop/core/target/release/*/
+      # - name: Archive compiled for macos
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: macos-compiled
+      #     path: apps/desktop/core/target/release/*/
