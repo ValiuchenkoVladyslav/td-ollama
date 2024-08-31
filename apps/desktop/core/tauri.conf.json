@@ -20,7 +20,7 @@
       {
         "decorations": false,
         "resizable": true,
-        "minWidth": 1460,
+        "minWidth": 1480,
         "minHeight": 720,
         "maximized": true,
         "title": "TG-OLLAMA"

@@ -26,7 +26,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 				</header>
 
 				<main className="flex h-[calc(100vh-36px)]">
-					<section className="w-[340px] px-3 flex flex-col gap-6">
+					<section className="w-[300px] px-3 flex flex-col gap-6">
 						<OllamaControl />
 
 						<Separator />
