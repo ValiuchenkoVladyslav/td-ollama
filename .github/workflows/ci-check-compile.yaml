@@ -47,7 +47,7 @@ jobs:
       - name: Archive compiled for windows
         uses: actions/upload-artifact@v4
         with:
-          name: windows-compiled
+          name: windows-compiled-msi
           path: apps/desktop/core/target/release/bundle/**/*
 
   check-compile-ubuntu:
@@ -106,8 +106,8 @@ jobs:
       - name: Check if project compiles
         run: bun run --cwd apps/desktop next-build && bun run --cwd apps/desktop build --target=x86_64-apple-darwin
 
-      # - name: Archive compiled for macos
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: macos-compiled
-      #     path: apps/desktop/core/target/release/*/
+      - name: Archive compiled for macos
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-compiled-app-dmg
+          path: apps/desktop/core/target/x86_64-apple-darwin/release/bundle/**/*
