@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-compiled
-          path: apps/desktop/core/target/release/*.exe apps/desktop/core/target/release/bundle/msi/*.msi
+          path: apps/desktop/core/target/release/bundle/**/*
 
   check-compile-ubuntu:
     runs-on: ubuntu-latest
@@ -80,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-compiled-rpm-deb-appimg
-          path: apps/desktop/core/target/release/bundle/
+          path: apps/desktop/core/target/release/bundle/**/*
 
   check-compile-macos:
     runs-on: macos-latest
@@ -99,6 +99,9 @@ jobs:
 
       - name: Install bun dependencies
         run: bun install
+      
+      - name: Install macos target
+        run: rustup target add x86_64-apple-darwin
 
       - name: Check if project compiles
         run: bun run --cwd apps/desktop next-build && bun run --cwd apps/desktop build --target=x86_64-apple-darwin
