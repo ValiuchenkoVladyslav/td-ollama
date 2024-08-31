@@ -22,6 +22,15 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					>
 						TG-OLLAMA
 					</Link>
+
+					<a
+						href="https://github.com/ValiuchenkoVladyslav/tg-ollama/blob/main/docs/DEVELOPMENT.md"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="font-semibold text-lg"
+					>
+						for devs
+					</a>
 				</header>
 
 				<main className="flex-1 flex *:flex-1">{children}</main>
