@@ -7,7 +7,7 @@ _An app that allows you to manage AI powered Telegram chatbots_
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
 
 ## 🎀 Better take a look at catgirl example!~
-> https://github.com/user-attachments/assets/038a9257-7d12-4cfd-8ac8-5551fd53ed9a
+> https://github.com/user-attachments/assets/14c6ef00-2eea-47fa-87fc-63a9d946461b
 
 ## 💓 Download
 ### [You can find installation instructions and download the installer in latest release](https://github.com/ValiuchenkoVladyslav/tg-ollama/releases)

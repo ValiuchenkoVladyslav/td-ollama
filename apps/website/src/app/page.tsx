@@ -24,7 +24,7 @@ export default function Home() {
 		<div className="flex items-center justify-center px-8">
 			<div className="flex flex-wrap gap-x-8 gap-y-4 justify-center">
 				<video
-					className="md:w-[740px] md:h-[417px]"
+					className="md:w-[740px] md:h-[410px]"
 					controls
 					loop
 					muted
@@ -33,7 +33,7 @@ export default function Home() {
 					controlsList="nodownload noremoteplayback noplaybackrate"
 				>
 					<source
-						src="https://github.com/user-attachments/assets/038a9257-7d12-4cfd-8ac8-5551fd53ed9a"
+						src="https://github.com/user-attachments/assets/14c6ef00-2eea-47fa-87fc-63a9d946461b"
 						type="video/mp4"
 					/>
 				</video>
