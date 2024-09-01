@@ -3,16 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import Blue from "~/images/blue.png";
-import Icon from "~/images/icon.png";
 import Pink from "~/images/pink.png";
 import "./globals.css";
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en">
-			<head>
-				<link rel="icon" href={Icon.src} sizes="any" />
-			</head>
+			<head />
 
 			<body className="flex flex-col min-h-[100dvh] bg-black text-white">
 				<header className="horizontal-line">
