@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppStore } from "~/store";
-import { botCardsKey, useBotCards } from "./_bot_cards";
+import { botCardsKey, useBotCards } from "./(home)/_bot-cards-store";
 
 if (typeof window !== "undefined") {
 	// init store on client side

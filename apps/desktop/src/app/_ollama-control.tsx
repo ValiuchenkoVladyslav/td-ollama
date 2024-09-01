@@ -3,7 +3,7 @@
 import { Button } from "~/components/ui/button";
 import { Switch } from "~/components/ui/switch";
 import { useAppStore } from "~/store";
-import { useBotCards } from "./_bot_cards";
+import { useBotCards } from "./(home)/_bot-cards-store";
 
 export function OllamaControl() {
 	const { manageOllama, setManageOllama, isOllamaRunning, setIsOllamaRunning } =
