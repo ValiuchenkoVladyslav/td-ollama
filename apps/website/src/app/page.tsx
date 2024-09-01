@@ -83,12 +83,12 @@ export default function Home() {
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuLabel className="opacity-75">
-								<h3 className="text-lg sm:text-xl flex gap-2 items-center pb-1">
+								<h3 className="text-lg sm:text-xl flex gap-2 items-center pb-1 text-yellow-500">
 									<Info />
 									Not tested yet!
 								</h3>
 								<p className="text-[14px] sm:text-md">
-									You can download compiled app from action artifacts
+									But you can still download compiled app from action artifacts
 								</p>
 							</DropdownMenuLabel>
 							<DropdownMenuSub>
@@ -109,6 +109,8 @@ export default function Home() {
 											<a
 												className="w-full"
 												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
+												target="_blank"
+												rel="noopener noreferrer"
 											>
 												RPM
 											</a>
@@ -117,6 +119,8 @@ export default function Home() {
 											<a
 												className="w-full"
 												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
+												target="_blank"
+												rel="noopener noreferrer"
 											>
 												DEB
 											</a>
@@ -129,6 +133,8 @@ export default function Home() {
 								<a
 									href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
 									className={downloadMenuItem}
+									target="_blank"
+									rel="noopener noreferrer"
 								>
 									<svg
 										fill="currentColor"
