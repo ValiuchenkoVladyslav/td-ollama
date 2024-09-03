@@ -32,7 +32,7 @@ fn main() {
 
       app_state.save(app.app_handle());
     })
-    // WARNING: UPDATE gui/src/core-api.ts WHENEVER YOU CHANGE COMMANDS
+    // WARNING: UPDATE ../../src/core-api.ts WHENEVER YOU CHANGE COMMANDS
     .invoke_handler(tauri::generate_handler![
       bot::tauri_commands::run_bot,
       bot::tauri_commands::stop_bot,
