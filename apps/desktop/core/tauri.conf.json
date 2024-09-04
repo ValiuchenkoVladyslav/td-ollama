@@ -12,8 +12,8 @@
     "frontendDist": "../out/",
     "devUrl": "http://localhost:3000"
   },
-  "productName": "tg-ollama",
-  "identifier": "tg-ollama",
+  "productName": "td-ollama",
+  "identifier": "td-ollama",
   "plugins": {},
   "app": {
     "windows": [
@@ -23,7 +23,7 @@
         "minWidth": 1480,
         "minHeight": 720,
         "maximized": true,
-        "title": "TG-OLLAMA"
+        "title": "TD-OLLAMA"
       }
     ],
     "security": {

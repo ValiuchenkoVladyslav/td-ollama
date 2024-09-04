@@ -7,7 +7,7 @@ export const metadata = createMetadata("For Developers");
 
 export default async function ForDevsPage() {
 	const source = await fetch(
-		"https://raw.githubusercontent.com/ValiuchenkoVladyslav/tg-ollama/main/docs/DEVELOPMENT.md",
+		"https://raw.githubusercontent.com/ValiuchenkoVladyslav/td-ollama/main/docs/DEVELOPMENT.md",
 	);
 
 	return (
@@ -18,7 +18,7 @@ export default async function ForDevsPage() {
 				<div className="w-full flex justify-center pt-12">
 					<Button size="lg" asChild>
 						<a
-							href="https://github.com/ValiuchenkoVladyslav/tg-ollama/blob/main/docs/DEVELOPMENT.md"
+							href="https://github.com/ValiuchenkoVladyslav/td-ollama/blob/main/docs/DEVELOPMENT.md"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="text-xl font-semibold flex gap-3 items-center"

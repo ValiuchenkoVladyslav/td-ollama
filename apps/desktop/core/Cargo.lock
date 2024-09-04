@@ -4304,6 +4304,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "td-ollama-core"
+version = "1.0.0"
+dependencies = [
+ "bytes",
+ "futures",
+ "reqwest 0.12.7",
+ "serde",
+ "serde_json",
+ "serenity",
+ "sysinfo",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-shell",
+ "teloxide",
+]
+
+[[package]]
 name = "teloxide"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4392,23 +4409,6 @@ dependencies = [
  "futf",
  "mac",
  "utf-8",
-]
-
-[[package]]
-name = "tg-ollama-core"
-version = "1.0.0"
-dependencies = [
- "bytes",
- "futures",
- "reqwest 0.12.7",
- "serde",
- "serde_json",
- "serenity",
- "sysinfo",
- "tauri",
- "tauri-build",
- "tauri-plugin-shell",
- "teloxide",
 ]
 
 [[package]]

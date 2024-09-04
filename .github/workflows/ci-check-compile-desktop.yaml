@@ -40,7 +40,7 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bunx turbo run build --filter=tg-ollama-desktop
+        run: bunx turbo run build --filter=td-ollama-desktop
 
       - name: Archive compiled for windows
         uses: actions/upload-artifact@v4
@@ -72,7 +72,7 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bunx turbo run build --filter=tg-ollama-desktop
+        run: bunx turbo run build --filter=td-ollama-desktop
 
       - name: Archive compiled for linux
         uses: actions/upload-artifact@v4
@@ -104,7 +104,7 @@ jobs:
         run: rustup target add x86_64-apple-darwin
 
       - name: Check if project compiles
-        run: bunx turbo run build --filter=tg-ollama-desktop -- --target=x86_64-apple-darwin
+        run: bunx turbo run build --filter=td-ollama-desktop -- --target=x86_64-apple-darwin
 
       - name: Archive compiled for macos
         uses: actions/upload-artifact@v4

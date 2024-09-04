@@ -32,7 +32,7 @@ pub fn stop_ollama() {
 
   for process in system.processes().values() {
     let process_name = process.name().to_string_lossy();
-    if process_name.contains("ollama") && !process_name.contains("tg-ollama") {
+    if process_name.contains("ollama") && !process_name.contains("td-ollama") {
       process.kill();
     }
   }
@@ -45,7 +45,7 @@ pub fn check_ollama() -> bool {
 
   for process in system.processes().values() {
     let process_name = process.name().to_string_lossy();
-    if process_name.contains("ollama") && !process_name.contains("tg-ollama") {
+    if process_name.contains("ollama") && !process_name.contains("td-ollama") {
       return true;
     }
   }

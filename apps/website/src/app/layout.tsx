@@ -17,7 +17,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						href="/"
 						className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-white"
 					>
-						TG-OLLAMA
+						TD-OLLAMA
 					</Link>
 
 					<Link href="/for-devs" className="font-semibold text-xl">
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 
 				<footer className="horizontal-line *:text-sm sm:*:text-lg">
 					<a
-						href="https://github.com/ValiuchenkoVladyslav/tg-ollama"
+						href="https://github.com/ValiuchenkoVladyslav/td-ollama"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="flex gap-2 items-center font-semibold opacity-70 hover:opacity-100 duration-300"

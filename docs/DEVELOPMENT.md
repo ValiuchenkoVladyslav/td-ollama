@@ -1,4 +1,4 @@
-# TG-OLLAMA — Information for developers
+# TD-OLLAMA — Information for developers
 
 ## Prerequisites
 - [**Follow Tauri prerequisites**](https://v2.tauri.app/start/prerequisites/)

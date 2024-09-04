@@ -17,7 +17,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 					className="flex items-center justify-between h-9"
 				>
 					<h1 className="pl-3 text-lg font-medium opacity-70">
-						TG-OLLAMA bot manager
+						TD-OLLAMA bot manager
 					</h1>
 
 					<menu className="flex *:grid *:place-content-center *:w-10 *:h-9">
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 						</div>
 
 						<a
-							href="https://github.com/ValiuchenkoVladyslav/tg-ollama"
+							href="https://github.com/ValiuchenkoVladyslav/td-ollama"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center gap-2 mt-auto mb-3 opacity-70 hover:opacity-100 duration-300"

@@ -1,5 +1,5 @@
 {
-  "name": "tg-ollama",
+  "name": "td-ollama",
   "private": true,
   "workspaces": [
     "./apps/desktop",

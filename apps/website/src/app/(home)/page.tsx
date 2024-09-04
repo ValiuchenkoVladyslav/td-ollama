@@ -40,7 +40,7 @@ export default function Home() {
 
 				<section className="flex justify-start flex-col gap-2">
 					<h1 className="text-2xl sm:text-4xl font-bold">
-						TG-OLLAMA — <br className="hidden sm:block" />
+						TD-OLLAMA — <br className="hidden sm:block" />
 						Telegram Ollama bot manager
 					</h1>
 					<p className="opacity-70 text-xl sm:text-2xl">
@@ -58,14 +58,14 @@ export default function Home() {
 								className="text-lg font-bold gap-2 mt-12 w-full sm:w-[320px]"
 							>
 								<ArrowDownToLine size={26} />
-								Download TG-OLLAMA
+								Download TD-OLLAMA
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="!border-white/40 max-w-[240px] sm:max-w-none sm:w-[320px]">
 							<DropdownMenuItem className="flex justify-between items-center">
 								<a
-									href="https://github.com/ValiuchenkoVladyslav/tg-ollama/releases/download/1.0.0/tg-ollama_1.0.0_x64_en-US.msi"
-									download="tg-ollama-installer.msi"
+									href="https://github.com/ValiuchenkoVladyslav/td-ollama/releases/download/1.0.0/td-ollama_1.0.0_x64_en-US.msi"
+									download="td-ollama-installer.msi"
 									className={downloadMenuItem}
 								>
 									<svg
@@ -108,7 +108,7 @@ export default function Home() {
 										<DropdownMenuItem>
 											<a
 												className="w-full"
-												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile-desktop.yaml"
+												href="https://github.com/ValiuchenkoVladyslav/td-ollama/actions/workflows/ci-check-compile-desktop.yaml"
 												target="_blank"
 												rel="noopener noreferrer"
 											>
@@ -118,7 +118,7 @@ export default function Home() {
 										<DropdownMenuItem>
 											<a
 												className="w-full"
-												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile-desktop.yaml"
+												href="https://github.com/ValiuchenkoVladyslav/td-ollama/actions/workflows/ci-check-compile-desktop.yaml"
 												target="_blank"
 												rel="noopener noreferrer"
 											>
@@ -131,7 +131,7 @@ export default function Home() {
 
 							<DropdownMenuItem>
 								<a
-									href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
+									href="https://github.com/ValiuchenkoVladyslav/td-ollama/actions/workflows/ci-check-compile.yaml"
 									className={downloadMenuItem}
 									target="_blank"
 									rel="noopener noreferrer"
