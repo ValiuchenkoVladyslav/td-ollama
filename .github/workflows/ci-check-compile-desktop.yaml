@@ -1,21 +1,17 @@
-name: Check compile
+name: Check desktop compile
 
 on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "LICENSE"
-      - ".vscode/settings.json"
-      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
+    paths:
+      - "apps/desktop/**"
 
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - "LICENSE"
-      - ".vscode/settings.json"
-      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
+    paths:
+      - "apps/desktop/**"
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -42,7 +38,7 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun run build
+        run: bunx turbo run build --filter=tg-ollama-desktop
 
       - name: Archive compiled for windows
         uses: actions/upload-artifact@v4
@@ -74,7 +70,7 @@ jobs:
         run: bun install
 
       - name: Check if project compiles
-        run: bun run build
+        run: bunx turbo run build --filter=tg-ollama-desktop
 
       - name: Archive compiled for linux
         uses: actions/upload-artifact@v4
@@ -101,12 +97,12 @@ jobs:
 
       - name: Install bun dependencies
         run: bun install
-      
+
       - name: Install macos target
         run: rustup target add x86_64-apple-darwin
 
       - name: Check if project compiles
-        run: bun run --cwd apps/desktop next-build && bun run --cwd apps/desktop build --target=x86_64-apple-darwin
+        run: bunx turbo run build --filter=tg-ollama-desktop -- --target=x86_64-apple-darwin
 
       - name: Archive compiled for macos
         uses: actions/upload-artifact@v4

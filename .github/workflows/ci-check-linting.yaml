@@ -4,18 +4,18 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "LICENSE"
-      - ".vscode/settings.json"
-      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
+    paths:
+      - "apps/**"
+      - ".github/workflows/ci-check-linting.yaml"
+      - "turbo.json"
 
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - "LICENSE"
-      - ".vscode/settings.json"
-      - "**/*.{md,jpg,jpeg,png,ico,svg,mp4}"
+    paths:
+      - "apps/**"
+      - ".github/workflows/ci-check-linting.yaml"
+      - "turbo.json"
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
