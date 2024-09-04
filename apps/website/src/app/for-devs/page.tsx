@@ -1,6 +1,9 @@
 import { ExternalLink } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Button } from "~/components/ui/button";
+import { createMetadata } from "~/meta";
+
+export const metadata = createMetadata("For Developers");
 
 export default async function ForDevsPage() {
 	const source = await fetch(
