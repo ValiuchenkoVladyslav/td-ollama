@@ -20,14 +20,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						TG-OLLAMA
 					</Link>
 
-					<a
-						href="https://github.com/ValiuchenkoVladyslav/tg-ollama/blob/main/docs/DEVELOPMENT.md"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="font-semibold text-lg"
-					>
+					<Link href="/for-devs" className="font-semibold text-xl">
 						for devs
-					</a>
+					</Link>
 				</header>
 
 				<main className="flex-1 flex *:flex-1">{children}</main>
@@ -53,7 +48,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					</a>
 				</footer>
 
-				<div className="absolute z-[-1] top-0 left-0 w-screen h-[100dvh] overflow-hidden">
+				<div className="fixed z-[-1] top-0 left-0 w-full h-full overflow-hidden">
 					<Image
 						alt=""
 						src={Blue}
