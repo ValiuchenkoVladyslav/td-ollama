@@ -41,7 +41,7 @@ export default function Home() {
 				<section className="flex justify-start flex-col gap-2">
 					<h1 className="text-2xl sm:text-4xl font-bold">
 						TD-OLLAMA — <br className="hidden sm:block" />
-						Telegram Ollama bot manager
+						Telegram & Discord Ollama bot manager
 					</h1>
 					<p className="opacity-70 text-xl sm:text-2xl">
 						An app that allows you to manage <br className="hidden sm:block" />{" "}
