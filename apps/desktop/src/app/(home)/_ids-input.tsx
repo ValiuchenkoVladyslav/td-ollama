@@ -11,7 +11,7 @@ export function AllowedIdsInput(props: {
 }) {
 	return (
 		<Input
-			placeholder="Allowed IDs (comma separated)"
+			placeholder="Allowed user IDs (comma separated)"
 			disabled={props.isBotRunning}
 			autoComplete="off"
 			className={props.errors.allowed_ids && "border-red-600"}

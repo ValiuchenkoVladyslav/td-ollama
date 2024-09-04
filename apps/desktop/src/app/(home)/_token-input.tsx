@@ -11,7 +11,7 @@ export function TokenInput(props: {
 }) {
 	return (
 		<PasswordInput
-			placeholder="Telegram bot token"
+			placeholder="Bot token"
 			defaultValue={props.botCardData.token}
 			disabled={props.isBotRunning}
 			className={props.errors.token && "border-red-600"}

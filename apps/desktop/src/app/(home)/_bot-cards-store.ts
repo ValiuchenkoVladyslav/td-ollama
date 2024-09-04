@@ -1,11 +1,13 @@
 import { create } from "zustand";
+import type { Commands } from "~/core-api";
 
-export type BotCardData = {
-	token: string;
-	allowed_ids: string;
-	system: string;
-	model: string;
+export type BotCardData = Omit<
+	Commands["run_bot"]["args"],
+	"allowed_ids" | "bot_type"
+> & {
 	cardKey: number;
+	allowed_ids: string;
+	bot_type: "telegram" | "discord" | "";
 };
 
 export const botCardsKey = "botcards";

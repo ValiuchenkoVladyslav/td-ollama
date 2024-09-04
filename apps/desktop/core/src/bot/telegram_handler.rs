@@ -1,25 +1,23 @@
-use std::sync::{Arc, Mutex};
 use futures::StreamExt;
-use teloxide::{prelude::{Bot, Message, Requester}, types};
+use teloxide::prelude::{Bot, Message, Requester};
 use crate::ollama::api::{ChatStream, Role, OllamaMessage};
-
-pub type BotChats = Arc<Mutex<Vec<(types::ChatId, Vec<OllamaMessage>)>>>;
+use super::utils::BotChats;
 
 pub async fn handle_message(
   bot: Bot,
   bot_chats: BotChats,
   msg: Message,
   system: String,
-  allowed_ids: Vec<types::UserId>,
+  allowed_ids: Vec<String>,
   model: String,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-  let chat_id = msg.chat.id;
+  let chat_id = msg.chat.id.to_string();
 
   let (Some(message_author), Some(message_text)) = (&msg.from, msg.text()) else {
     return Ok(()); // Ignore non-text messages and channels
   };
 
-  if !allowed_ids.contains(&message_author.id) {
+  if !allowed_ids.contains(&message_author.id.to_string()) {
     return Ok(()); // Ignore messages from not allowed users
   }
 
@@ -45,7 +43,7 @@ pub async fn handle_message(
   };
 
   let mut ai_response = res_stream.next().await.unwrap().message;
-  let msg_id = bot.send_message(chat_id, &ai_response.content).await?.id;
+  let msg_id = bot.send_message(chat_id.clone(), &ai_response.content).await?.id;
 
   let mut counter = 0;
   while let Some(res) = res_stream.next().await {
@@ -53,12 +51,12 @@ pub async fn handle_message(
     ai_response.content.push_str(&res.message.content);
 
     if counter % 2 == 0 { // in order to avoid telegram rate limits
-      bot.edit_message_text(chat_id, msg_id, &ai_response.content).await?;
+      bot.edit_message_text(chat_id.clone(), msg_id, &ai_response.content).await?;
     }
   }
 
   if counter % 2 != 0 { // append missing final part if it exists
-    bot.edit_message_text(chat_id, msg_id, &ai_response.content).await?;
+    bot.edit_message_text(chat_id.clone(), msg_id, &ai_response.content).await?;
   }
 
   // Save new chat messages

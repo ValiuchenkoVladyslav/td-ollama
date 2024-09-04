@@ -3,9 +3,10 @@
 import { Plus } from "lucide-react";
 import { useReducer } from "react";
 import { useForm } from "react-hook-form";
-import { API, invoke } from "~/core-api";
+import { API, type BotType, invoke } from "~/core-api";
 import { useAppStore } from "~/store";
 import { type BotCardData, useBotCards } from "./_bot-cards-store";
+import { BotTypeSelect } from "./_bot-type-select";
 import { DeleteCardButton } from "./_delete-card-button";
 import { AllowedIdsInput } from "./_ids-input";
 import { ModelSelect } from "./_model-select";
@@ -40,15 +41,19 @@ export function BotCard(props: BotCardData) {
 		setBotCards(botCards);
 	}
 
-	const submitBotData = handleSubmit((data) => {
+	const submitBotData = handleSubmit((_data: BotCardData) => {
+		// validated via RHK
+		const data = _data as Omit<BotCardData, "bot_type"> & { bot_type: BotType };
+
 		if (isBotRunning) {
-			invoke(API.StopBot, { token: data.token });
+			invoke(API.StopBot, data);
 			return setIsBotRunning(false);
 		}
 
-		const allowed_ids = data.allowed_ids.split(",").map(Number);
+		const allowed_ids = data.allowed_ids.split(",");
 
-		for (const id of allowed_ids) {
+		// validate if every id can be converted to a number at least
+		for (const id of allowed_ids.map(Number)) {
 			if (Number.isNaN(id))
 				return setError("allowed_ids", { message: "invalid" });
 		}
@@ -68,13 +73,23 @@ export function BotCard(props: BotCardData) {
 			onSubmit={submitBotData}
 			className="rounded-xl bg-slate-950 p-8 flex flex-col gap-4"
 		>
-			<TokenInput
-				isBotRunning={isBotRunning}
-				formRegister={register}
-				updateBotCard={updateBotCard}
-				botCardData={props}
-				errors={errors}
-			/>
+			<div className="flex gap-4">
+				<BotTypeSelect
+					isBotRunning={isBotRunning}
+					control={control}
+					updateBotCard={updateBotCard}
+					botCardData={props}
+					errors={errors}
+				/>
+
+				<TokenInput
+					isBotRunning={isBotRunning}
+					formRegister={register}
+					updateBotCard={updateBotCard}
+					botCardData={props}
+					errors={errors}
+				/>
+			</div>
 
 			<AllowedIdsInput
 				isBotRunning={isBotRunning}
@@ -145,6 +160,7 @@ export function BotCardsList() {
 						allowed_ids: "",
 						system: "",
 						model: "",
+						bot_type: "",
 						cardKey: highestIndex + 1,
 					});
 

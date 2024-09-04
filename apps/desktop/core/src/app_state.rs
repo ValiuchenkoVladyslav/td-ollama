@@ -6,7 +6,9 @@ pub struct AppState {
   pub manage_ollama: bool,
 
   #[serde(skip)]
-  pub running_bots: Vec<(teloxide::dispatching::ShutdownToken, String)>
+  pub running_tg_bots: Vec<(teloxide::dispatching::ShutdownToken, String)>,
+  #[serde(skip)]
+  pub running_ds_bots: Vec<(std::sync::Arc<serenity::all::ShardManager>, String)>
 }
 
 impl AppState {

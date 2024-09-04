@@ -12,7 +12,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
 		const [showPassword, setShowPassword] = React.useState(false);
 
 		return (
-			<div className="relative">
+			<div className="relative flex-1">
 				<Input
 					type={showPassword ? "text" : "password"}
 					className={cn("hide-password-toggle pr-10 font-mono", className)}
