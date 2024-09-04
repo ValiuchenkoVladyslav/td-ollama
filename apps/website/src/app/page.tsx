@@ -108,7 +108,7 @@ export default function Home() {
 										<DropdownMenuItem>
 											<a
 												className="w-full"
-												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
+												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile-desktop.yaml"
 												target="_blank"
 												rel="noopener noreferrer"
 											>
@@ -118,7 +118,7 @@ export default function Home() {
 										<DropdownMenuItem>
 											<a
 												className="w-full"
-												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile.yaml"
+												href="https://github.com/ValiuchenkoVladyslav/tg-ollama/actions/workflows/ci-check-compile-desktop.yaml"
 												target="_blank"
 												rel="noopener noreferrer"
 											>
