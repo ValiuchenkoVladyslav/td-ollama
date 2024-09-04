@@ -21,15 +21,10 @@ pub async fn run_bot(
     use super::telegram_handler::handle_message;
 
     // validate token
-    #[derive(serde::Deserialize)]
-    struct BotStatus {
-      ok: bool,
-    }
-
     let bot_status = reqwest::get(format!("https://api.telegram.org/bot{token}/getMe"))
-      .await.unwrap().json::<BotStatus>().await.unwrap();
+      .await.unwrap().status();
 
-    if !bot_status.ok {
+    if bot_status != 200 {
       return Err(());
     }
 
@@ -52,6 +47,15 @@ pub async fn run_bot(
     use super::discord_handler::{DiscordHandler, BotConfigData, BotConfig};
     use serenity::all::{GatewayIntents as GI, Client};
 
+    // validate token
+    let bot_status = reqwest::Client::new().get("https://discord.com/api/v10/users/@me")
+      .header("Authorization", format!("Bot {}", token)).send().await.unwrap().status();
+
+    if bot_status != 200 {
+      return Err(());
+    }
+
+    // run bot
     let mut client = Client::builder(
       &token,
       GI::GUILD_MESSAGES | GI::DIRECT_MESSAGES | GI::MESSAGE_CONTENT
