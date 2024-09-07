@@ -7,8 +7,8 @@
     "next-build": "next build",
     "build": "tauri build -c core/tauri.conf.json",
     "build:debug": "tauri build -c core/tauri.conf.json -d",
-    "lint": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps && biome check . --config-path=../../biome.json",
-    "lint:fix": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps --fix --allow-dirty --allow-staged && biome check --write . --config-path=../../biome.json"
+    "lint": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps",
+    "lint:fix": "cargo clippy --manifest-path ./core/Cargo.toml --no-deps --fix --allow-dirty --allow-staged"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.1",

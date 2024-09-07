@@ -2,18 +2,13 @@
   "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
 
   "files": {
-    "include": [
-      "*.json",
-      "*.mjs",
-      "*.ts",
-      "*.tsx"
-    ]
+    "include": ["*.json", "*.mjs", "*.ts", "*.tsx"]
   },
 
   "vcs": {
     "enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
+    "clientKind": "git",
+    "useIgnoreFile": true
   },
 
   "organizeImports": {
