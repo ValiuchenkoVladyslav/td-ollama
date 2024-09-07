@@ -7,95 +7,95 @@ const localModelsKey = "localModels";
 
 // biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
 export const useOllamaStore = create((_set: any) => {
-	const set: (typeof useOllamaStore)["setState"] = _set;
+  const set: (typeof useOllamaStore)["setState"] = _set;
 
-	return {
-		manageOllama: false,
-		setManageOllama(manageOllama: boolean) {
-			localStorage.setItem(manageOllamaKey, String(manageOllama));
-			invoke(API.SetManageOllama, { manage: manageOllama });
+  return {
+    manageOllama: false,
+    setManageOllama(manageOllama: boolean) {
+      localStorage.setItem(manageOllamaKey, String(manageOllama));
+      invoke(API.SetManageOllama, { manage: manageOllama });
 
-			set({ manageOllama });
-		},
+      set({ manageOllama });
+    },
 
-		isOllamaRunning: false,
-		async setIsOllamaRunning(setRunning: boolean) {
-			if (!setRunning) {
-				set({ isOllamaRunning: false });
-				return await invoke(API.StopOllama, undefined);
-			}
+    isOllamaRunning: false,
+    async setIsOllamaRunning(setRunning: boolean) {
+      if (!setRunning) {
+        set({ isOllamaRunning: false });
+        return await invoke(API.StopOllama, undefined);
+      }
 
-			const status = await invoke(API.StartOllama, undefined);
-			if (status.error) return ollamaErrorToast();
+      const status = await invoke(API.StartOllama, undefined);
+      if (status.error) return ollamaErrorToast();
 
-			set({ isOllamaRunning: true });
+      set({ isOllamaRunning: true });
 
-			// update local models cache
-			const { data } = await invoke(API.ListModels, undefined);
-			if (!data) return;
+      // update local models cache
+      const { data } = await invoke(API.ListModels, undefined);
+      if (!data) return;
 
-			set({ localModels: data });
+      set({ localModels: data });
 
-			localStorage.setItem(localModelsKey, JSON.stringify(data));
-		},
+      localStorage.setItem(localModelsKey, JSON.stringify(data));
+    },
 
-		localModels: [] as string[],
+    localModels: [] as string[],
 
-		async initStore() {
-			const manageOllama = localStorage.getItem(manageOllamaKey) === "true";
+    async initStore() {
+      const manageOllama = localStorage.getItem(manageOllamaKey) === "true";
 
-			set({
-				isOllamaRunning: manageOllama, // predictive update
-				manageOllama,
-				localModels: JSON.parse(localStorage.getItem(localModelsKey) ?? "[]"),
-			});
+      set({
+        isOllamaRunning: manageOllama, // predictive update
+        manageOllama,
+        localModels: JSON.parse(localStorage.getItem(localModelsKey) ?? "[]"),
+      });
 
-			const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
+      const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
 
-			if (manageOllama && !isOllamaRunning) {
-				ollamaErrorToast();
-			}
+      if (manageOllama && !isOllamaRunning) {
+        ollamaErrorToast();
+      }
 
-			set({ isOllamaRunning });
+      set({ isOllamaRunning });
 
-			if (isOllamaRunning) {
-				// update local models cache
-				const localModels =
-					(await invoke(API.ListModels, undefined)).data ?? [];
+      if (isOllamaRunning) {
+        // update local models cache
+        const localModels =
+          (await invoke(API.ListModels, undefined)).data ?? [];
 
-				set({ localModels });
+        set({ localModels });
 
-				localStorage.setItem(localModelsKey, JSON.stringify(localModels));
-			}
-		},
-	};
+        localStorage.setItem(localModelsKey, JSON.stringify(localModels));
+      }
+    },
+  };
 });
 
 export type BotCardData = Omit<
-	Commands["run_bot"]["args"],
-	"allowed_ids" | "bot_type"
+  Commands["run_bot"]["args"],
+  "allowed_ids" | "bot_type"
 > & {
-	cardKey: number;
-	allowed_ids: string;
-	bot_type: BotType | "";
+  cardKey: number;
+  allowed_ids: string;
+  bot_type: BotType | "";
 };
 
 export const botCardsKey = "botcards";
 
 // biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
 export const useBotCards = create((_set: any) => {
-	const set: (typeof useBotCards)["setState"] = _set;
+  const set: (typeof useBotCards)["setState"] = _set;
 
-	return {
-		runningBots: 0,
-		setRunningBots(runningBots: number) {
-			set({ runningBots });
-		},
+  return {
+    runningBots: 0,
+    setRunningBots(runningBots: number) {
+      set({ runningBots });
+    },
 
-		botCards: [] as BotCardData[],
-		setBotCards(botCards: BotCardData[]) {
-			localStorage.setItem(botCardsKey, JSON.stringify(botCards));
-			set({ botCards });
-		},
-	};
+    botCards: [] as BotCardData[],
+    setBotCards(botCards: BotCardData[]) {
+      localStorage.setItem(botCardsKey, JSON.stringify(botCards));
+      set({ botCards });
+    },
+  };
 });

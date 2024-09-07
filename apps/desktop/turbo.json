@@ -13,16 +13,12 @@
     "build:debug": {
       "dependsOn": ["^build:debug", "next-build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [
-        "core/target/debug/*.exe"
-      ]
+      "outputs": ["core/target/debug/*.exe"]
     },
     "next-build": {
       "dependsOn": ["^next-build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [
-        "out/**"
-      ]
+      "outputs": ["out/**"]
     }
   }
 }

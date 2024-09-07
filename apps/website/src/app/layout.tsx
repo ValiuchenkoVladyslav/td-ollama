@@ -7,62 +7,62 @@ import Pink from "~/images/pink.png";
 import "./globals.css";
 
 export default function RootLayout({ children }: PropsWithChildren) {
-	return (
-		<html lang="en">
-			<head />
+  return (
+    <html lang="en">
+      <head />
 
-			<body className="flex flex-col min-h-[100dvh] bg-black text-white">
-				<header className="horizontal-line">
-					<Link
-						href="/"
-						className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-white"
-					>
-						TD-OLLAMA
-					</Link>
+      <body className="flex flex-col min-h-[100dvh] bg-black text-white">
+        <header className="horizontal-line">
+          <Link
+            href="/"
+            className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-white"
+          >
+            TD-OLLAMA
+          </Link>
 
-					<Link href="/for-devs" className="font-semibold text-xl">
-						for devs
-					</Link>
-				</header>
+          <Link href="/for-devs" className="font-semibold text-xl">
+            for devs
+          </Link>
+        </header>
 
-				<main className="flex-1 flex *:flex-1">{children}</main>
+        <main className="flex-1 flex *:flex-1">{children}</main>
 
-				<footer className="horizontal-line *:text-sm sm:*:text-lg">
-					<a
-						href="https://github.com/ValiuchenkoVladyslav/td-ollama"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="flex gap-2 items-center font-semibold opacity-70 hover:opacity-100 duration-300"
-					>
-						<Github size={26} />
-						Project GitHub
-					</a>
+        <footer className="horizontal-line *:text-sm sm:*:text-lg">
+          <a
+            href="https://github.com/ValiuchenkoVladyslav/td-ollama"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex gap-2 items-center font-semibold opacity-70 hover:opacity-100 duration-300"
+          >
+            <Github size={26} />
+            Project GitHub
+          </a>
 
-					<a
-						href="https://github.com/ValiuchenkoVladyslav"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="font-semibold opacity-70 hover:opacity-100 duration-300"
-					>
-						@ValiuchenkoVladyslav
-					</a>
-				</footer>
+          <a
+            href="https://github.com/ValiuchenkoVladyslav"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold opacity-70 hover:opacity-100 duration-300"
+          >
+            @ValiuchenkoVladyslav
+          </a>
+        </footer>
 
-				<div className="fixed z-[-1] top-0 left-0 w-full h-full overflow-hidden">
-					<Image
-						alt=""
-						src={Blue}
-						width={500}
-						className="absolute !w-[max(50vw,500px)]"
-					/>
-					<Image
-						alt=""
-						src={Pink}
-						width={500}
-						className="absolute right-0 bottom-0 opacity-35 !w-[max(50vw,500px)]"
-					/>
-				</div>
-			</body>
-		</html>
-	);
+        <div className="fixed z-[-1] top-0 left-0 w-full h-full overflow-hidden">
+          <Image
+            alt=""
+            src={Blue}
+            width={500}
+            className="absolute !w-[max(50vw,500px)]"
+          />
+          <Image
+            alt=""
+            src={Pink}
+            width={500}
+            className="absolute right-0 bottom-0 opacity-35 !w-[max(50vw,500px)]"
+          />
+        </div>
+      </body>
+    </html>
+  );
 }

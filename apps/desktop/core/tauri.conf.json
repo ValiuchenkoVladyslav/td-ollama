@@ -2,10 +2,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": [
-      "icons/icon.png",
-      "icons/icon.ico"
-    ]
+    "icon": ["icons/icon.png", "icons/icon.ico"]
   },
   "build": {
     "beforeDevCommand": "bun run next dev",

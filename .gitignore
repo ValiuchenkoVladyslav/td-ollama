@@ -7,10 +7,10 @@
 **/out/
 
 # Cargo
-apps/desktop/core/target/
+**/target/
 
 # Tauri generated
-apps/desktop/core/gen/
+**/gen/
 
 # Editor config
 .vscode/*

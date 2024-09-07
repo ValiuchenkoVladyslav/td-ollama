@@ -5,34 +5,34 @@ import { Switch } from "~/components/ui/switch";
 import { useBotCards, useOllamaStore } from "~/store";
 
 export function OllamaControl() {
-	const { manageOllama, setManageOllama, isOllamaRunning, setIsOllamaRunning } =
-		useOllamaStore();
+  const { manageOllama, setManageOllama, isOllamaRunning, setIsOllamaRunning } =
+    useOllamaStore();
 
-	const runningBots = useBotCards((state) => state.runningBots);
+  const runningBots = useBotCards((state) => state.runningBots);
 
-	return (
-		<div className="flex flex-col gap-2">
-			<Button
-				className="w-full text-lg"
-				disabled={runningBots > 0}
-				onClick={() => setIsOllamaRunning(!isOllamaRunning)}
-			>
-				{isOllamaRunning ? "Stop Ollama" : "Start Ollama"}
-			</Button>
+  return (
+    <div className="flex flex-col gap-2">
+      <Button
+        className="w-full text-lg"
+        disabled={runningBots > 0}
+        onClick={() => setIsOllamaRunning(!isOllamaRunning)}
+      >
+        {isOllamaRunning ? "Stop Ollama" : "Start Ollama"}
+      </Button>
 
-			<div className="flex items-center gap-3 cursor-pointer">
-				<Switch
-					id="manageOllama"
-					checked={manageOllama}
-					onCheckedChange={() => setManageOllama(!manageOllama)}
-				/>
-				<label
-					htmlFor="manageOllama"
-					className="text-md font-medium cursor-pointer"
-				>
-					Autostart & stop Ollama
-				</label>
-			</div>
-		</div>
-	);
+      <div className="flex items-center gap-3 cursor-pointer">
+        <Switch
+          id="manageOllama"
+          checked={manageOllama}
+          onCheckedChange={() => setManageOllama(!manageOllama)}
+        />
+        <label
+          htmlFor="manageOllama"
+          className="text-md font-medium cursor-pointer"
+        >
+          Autostart & stop Ollama
+        </label>
+      </div>
+    </div>
+  );
 }
