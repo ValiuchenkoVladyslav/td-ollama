@@ -6,16 +6,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import type { BotCardData } from "./_bot-cards-store";
+import { type BotCardData, useOllamaStore } from "~/store";
 
 export function ModelSelect(props: {
 	isBotRunning: boolean;
 	botCardData: BotCardData;
 	errors: FieldErrors<BotCardData>;
 	control: Control<BotCardData, unknown>;
-	localModels: string[];
 	updateBotCard: (botCard: BotCardData) => void;
 }) {
+	const localModels = useOllamaStore((state) => state.localModels);
+
 	return (
 		<Controller
 			control={props.control}
@@ -41,7 +42,7 @@ export function ModelSelect(props: {
 						<SelectValue placeholder="Model" />
 					</SelectTrigger>
 					<SelectContent>
-						{props.localModels.map((model) => (
+						{localModels.map((model) => (
 							<SelectItem key={model} value={model}>
 								{model}
 							</SelectItem>

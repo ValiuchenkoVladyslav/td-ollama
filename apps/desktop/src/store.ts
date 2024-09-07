@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { ollamaErrorToast } from "./components/ollama-error-toast";
-import { API, invoke } from "./core-api";
+import { API, type BotType, type Commands, invoke } from "./core-api";
 
 const manageOllamaKey = "manageOllama";
 const localModelsKey = "localModels";
 
 // biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
-export const useAppStore = create((_set: any) => {
-	const set: (typeof useAppStore)["setState"] = _set;
+export const useOllamaStore = create((_set: any) => {
+	const set: (typeof useOllamaStore)["setState"] = _set;
 
 	return {
 		manageOllama: false,
@@ -67,6 +67,35 @@ export const useAppStore = create((_set: any) => {
 
 				localStorage.setItem(localModelsKey, JSON.stringify(localModels));
 			}
+		},
+	};
+});
+
+export type BotCardData = Omit<
+	Commands["run_bot"]["args"],
+	"allowed_ids" | "bot_type"
+> & {
+	cardKey: number;
+	allowed_ids: string;
+	bot_type: BotType | "";
+};
+
+export const botCardsKey = "botcards";
+
+// biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
+export const useBotCards = create((_set: any) => {
+	const set: (typeof useBotCards)["setState"] = _set;
+
+	return {
+		runningBots: 0,
+		setRunningBots(runningBots: number) {
+			set({ runningBots });
+		},
+
+		botCards: [] as BotCardData[],
+		setBotCards(botCards: BotCardData[]) {
+			localStorage.setItem(botCardsKey, JSON.stringify(botCards));
+			set({ botCards });
 		},
 	};
 });

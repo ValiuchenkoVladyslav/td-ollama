@@ -6,7 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import type { BotCardData } from "./_bot-cards-store";
+import type { BotCardData } from "~/store";
 
 export function BotTypeSelect(props: {
 	isBotRunning: boolean;

@@ -1,6 +1,6 @@
 import type { UseFormRegister } from "react-hook-form";
 import { Textarea } from "~/components/ui/textarea";
-import type { BotCardData } from "./_bot-cards-store";
+import type { BotCardData } from "~/store";
 
 export function SystemPromptInput(props: {
 	isBotRunning: boolean;

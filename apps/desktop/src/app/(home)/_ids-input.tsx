@@ -1,6 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { Input } from "~/components/ui/input";
-import type { BotCardData } from "./_bot-cards-store";
+import type { BotCardData } from "~/store";
 
 export function AllowedIdsInput(props: {
 	isBotRunning: boolean;

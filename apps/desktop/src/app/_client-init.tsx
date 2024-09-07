@@ -1,11 +1,10 @@
 "use client";
 
-import { useAppStore } from "~/store";
-import { botCardsKey, useBotCards } from "./(home)/_bot-cards-store";
+import { botCardsKey, useBotCards, useOllamaStore } from "~/store";
 
 if (typeof window !== "undefined") {
 	// init store on client side
-	useAppStore.getState().initStore();
+	useOllamaStore.getState().initStore();
 	useBotCards
 		.getState()
 		.setBotCards(JSON.parse(localStorage.getItem(botCardsKey) ?? "[]"));

@@ -2,12 +2,11 @@
 
 import { Button } from "~/components/ui/button";
 import { Switch } from "~/components/ui/switch";
-import { useAppStore } from "~/store";
-import { useBotCards } from "./(home)/_bot-cards-store";
+import { useBotCards, useOllamaStore } from "~/store";
 
 export function OllamaControl() {
 	const { manageOllama, setManageOllama, isOllamaRunning, setIsOllamaRunning } =
-		useAppStore();
+		useOllamaStore();
 
 	const runningBots = useBotCards((state) => state.runningBots);
 

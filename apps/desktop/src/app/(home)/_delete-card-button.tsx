@@ -7,7 +7,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import type { BotCardData } from "./_bot-cards-store";
+import type { BotCardData } from "~/store";
 
 export function DeleteCardButton(props: {
 	isBotRunning: boolean;
