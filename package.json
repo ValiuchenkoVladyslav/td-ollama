@@ -6,7 +6,7 @@
   "scripts": {
     "build": "turbo build",
     "build:debug": "turbo build:debug",
-    "lint": "biome check --staged --no-errors-on-unmatched . && turbo lint",
+    "lint": "biome check . && turbo lint",
     "lint:fix": "biome check --staged --no-errors-on-unmatched --write . && turbo lint:fix",
     "dev:desktop": "bun --cwd ./apps/desktop dev",
     "dev:website": "bun --cwd ./apps/website dev"
