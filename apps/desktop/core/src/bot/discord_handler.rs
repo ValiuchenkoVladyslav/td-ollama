@@ -14,14 +14,14 @@ pub struct DiscordHandler;
 #[async_trait]
 impl EventHandler for DiscordHandler {
   async fn message(&self, ctx: Context, msg: Message) {
+    if msg.content.is_empty() {
+      return; // Ignore non-text messages
+    }
+
     let bot_data = ctx.data.read().await;
     let BotConfig { allowed_ids, model, system, bot_chats } = bot_data.get::<BotConfigData>().unwrap();
 
     let chat_id = msg.channel_id.to_string();
-
-    if msg.content.is_empty() {
-      return; // Ignore non-text messages
-    }
 
     if !allowed_ids.contains(&msg.author.id.to_string()) {
       return; // Ignore messages from not allowed users
@@ -43,7 +43,7 @@ impl EventHandler for DiscordHandler {
     });
 
     // Get response from Ollama and send it to discord
-    let Ok(mut res_stream) = ChatStream::new(message_history.clone(), model.into()).await else {
+    let Ok(mut res_stream) = ChatStream::new(&message_history, model).await else {
       msg.reply(&ctx.http, "ERROR: Failed to connect to Ollama server!").await.unwrap();
       return;
     };

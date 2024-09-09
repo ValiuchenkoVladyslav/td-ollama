@@ -29,7 +29,7 @@ pub struct ChatStream {
 }
 
 impl ChatStream {
-  pub async fn new(messages: Vec<OllamaMessage>, model: String) -> Result<Self, Error> {
+  pub async fn new(messages: &Vec<OllamaMessage>, model: impl Into<String> + Serialize) -> Result<Self, Error> {
     match Client::new().post(format!("{OLLAMA_URL}chat")).body(
       serde_json::json!({
         "model": model,
