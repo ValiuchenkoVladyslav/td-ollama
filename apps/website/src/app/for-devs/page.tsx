@@ -1,5 +1,6 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink as ELIcon } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { ExternalLink } from "~/components/external-link";
 import { Button } from "~/components/ui/button";
 import { createMetadata } from "~/meta";
 
@@ -17,15 +18,13 @@ export default async function ForDevsPage() {
 
         <div className="w-full flex justify-center pt-12">
           <Button size="lg" asChild>
-            <a
+            <ExternalLink
               href="https://github.com/ValiuchenkoVladyslav/td-ollama/blob/main/docs/DEVELOPMENT.md"
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-xl font-semibold flex gap-3 items-center"
             >
-              <ExternalLink />
+              <ELIcon />
               Edit this page on GitHub
-            </a>
+            </ExternalLink>
           </Button>
         </div>
       </div>

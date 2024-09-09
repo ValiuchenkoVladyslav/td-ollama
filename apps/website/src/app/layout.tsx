@@ -1,12 +1,12 @@
 import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { PropsWithChildren } from "react";
 import Blue from "~/images/blue.png";
 import Pink from "~/images/pink.png";
 import "./globals.css";
+import { ExternalLink } from "~/components/external-link";
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
       <head />
@@ -28,24 +28,20 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <main className="flex-1 flex *:flex-1">{children}</main>
 
         <footer className="horizontal-line *:text-sm sm:*:text-lg">
-          <a
+          <ExternalLink
             href="https://github.com/ValiuchenkoVladyslav/td-ollama"
-            target="_blank"
-            rel="noopener noreferrer"
             className="flex gap-2 items-center font-semibold opacity-70 hover:opacity-100 duration-300"
           >
             <Github size={26} />
             Project GitHub
-          </a>
+          </ExternalLink>
 
-          <a
+          <ExternalLink
             href="https://github.com/ValiuchenkoVladyslav"
-            target="_blank"
-            rel="noopener noreferrer"
             className="font-semibold opacity-70 hover:opacity-100 duration-300"
           >
             @ValiuchenkoVladyslav
-          </a>
+          </ExternalLink>
         </footer>
 
         <div className="fixed z-[-1] top-0 left-0 w-full h-full overflow-hidden">
