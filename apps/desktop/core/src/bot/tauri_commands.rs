@@ -1,4 +1,4 @@
-use crate::{app_state::CommandState, bot::utils::BotChats};
+use crate::{app_state::CommandState, bot::utils::BotConfig};
 
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(rename_all="lowercase")]
@@ -31,11 +31,11 @@ pub async fn run_bot(
     // run bot
     let mut dispatcher = Dispatcher::builder(
       tl::Bot::new(&token),
-      tl::types::Update::filter_message().endpoint(
-        move |bot, chats, msg| handle_message(bot, chats, msg, system.clone(), allowed_ids.clone(), model.clone())
-      )
+      tl::types::Update::filter_message().endpoint(handle_message)
     )
-      .dependencies(tl::dptree::deps![BotChats::default()])
+      .dependencies(tl::dptree::deps![std::sync::Arc::new(
+        BotConfig { allowed_ids, model, system, bot_chats: Default::default() }
+      )])
       .build();
 
     state.lock().unwrap().running_tg_bots.push((dispatcher.shutdown_token(), token));
@@ -44,7 +44,7 @@ pub async fn run_bot(
       dispatcher.dispatch().await;
     });
   } else { // DISCORD BOT ===========================
-    use super::discord_handler::{DiscordHandler, BotConfigData, BotConfig};
+    use super::discord_handler::{DiscordHandler, BotConfigData};
     use serenity::all::{GatewayIntents as GI, Client};
 
     // validate token
@@ -62,12 +62,9 @@ pub async fn run_bot(
     )
       .event_handler(DiscordHandler).await.unwrap();
 
-    client.data.write().await.insert::<BotConfigData>(BotConfig {
-      allowed_ids,
-      model,
-      system,
-      bot_chats: BotChats::default(),
-    });
+    client.data.write().await.insert::<BotConfigData>(
+      BotConfig { allowed_ids, model, system, bot_chats: Default::default() }
+    );
 
     state.lock().unwrap().running_ds_bots.push((client.shard_manager.clone(), token));
 

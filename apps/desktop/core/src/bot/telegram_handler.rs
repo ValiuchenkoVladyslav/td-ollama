@@ -1,21 +1,18 @@
 use futures::StreamExt;
 use teloxide::prelude::{Bot, Message, Requester};
 use crate::ollama::api::{ChatStream, Role, OllamaMessage};
-use super::utils::BotChats;
+use super::utils::BotConfig;
 
 pub async fn handle_message(
-  bot: Bot,
-  bot_chats: BotChats,
-  msg: Message,
-  system: String,
-  allowed_ids: Vec<String>,
-  model: String,
+  bot: Bot, config: std::sync::Arc<BotConfig>, msg: Message,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
   let chat_id = msg.chat.id.to_string();
 
   let (Some(message_author), Some(message_text)) = (&msg.from, msg.text()) else {
     return Ok(()); // Ignore non-text messages and channels
   };
+
+  let BotConfig { allowed_ids, model, system, bot_chats } = &*config;
 
   if !allowed_ids.contains(&message_author.id.to_string()) {
     return Ok(()); // Ignore messages from not allowed users
@@ -26,7 +23,7 @@ pub async fn handle_message(
     None => vec![
       OllamaMessage {
         role: Role::System,
-        content: system,
+        content: system.into(),
       },
     ]
   };
@@ -37,7 +34,7 @@ pub async fn handle_message(
   });
 
   // Get response from Ollama and send it to telegram
-  let Ok(mut res_stream) = ChatStream::new(message_history.clone(), model).await else {
+  let Ok(mut res_stream) = ChatStream::new(message_history.clone(), model.into()).await else {
     bot.send_message(chat_id, "ERROR: Failed to connect to Ollama server!").await?;
     return Ok(());
   };

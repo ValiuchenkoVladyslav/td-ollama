@@ -1,4 +1,9 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 use crate::ollama::api::OllamaMessage;
 
-pub type BotChats = Arc<Mutex<Vec<(String, Vec<OllamaMessage>)>>>;
+pub struct BotConfig {
+  pub allowed_ids: Vec<String>,
+  pub model: String,
+  pub system: String,
+  pub bot_chats: Mutex<Vec<(String, Vec<OllamaMessage>)>>,
+}

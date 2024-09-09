@@ -1,14 +1,7 @@
 use futures::StreamExt;
 use serenity::all::{async_trait, Context, EditMessage, EventHandler, Message};
 use crate::ollama::api::{ChatStream, OllamaMessage, Role};
-use super::utils::BotChats;
-
-pub struct BotConfig {
-  pub allowed_ids: Vec<String>,
-  pub model: String,
-  pub system: String,
-  pub bot_chats: BotChats,
-}
+use super::utils::BotConfig;
 
 pub struct BotConfigData;
 
