@@ -2,7 +2,8 @@
   "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
 
   "files": {
-    "include": ["*.json", "*.mjs", "*.ts", "*.tsx"]
+    "include": ["*.json", "*.mjs", "*.ts", "*.tsx"],
+    "ignore": [".vscode/settings.json"]
   },
 
   "vcs": {
