@@ -1,2 +1,5 @@
-# Check project linting && Readd staged files (--quiet flag is needed when we're trying to readd deleted file)
-bun lint:fix && git add $(git diff --name-only --cached --quiet)
+# Check project linting
+bun lint:fix
+
+# Readd staged files (--ignore-errors flag is needed when we're trying to readd deleted file)
+git add $(git diff --name-only --cached) --ignore-errors
