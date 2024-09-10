@@ -6,11 +6,14 @@ const manageOllamaKey = "manageOllama";
 const localModelsKey = "localModels";
 
 // biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
-export const useOllamaStore = create((_set: any) => {
+export const useOllamaStore = create((_set: any, _get: any) => {
   const set: (typeof useOllamaStore)["setState"] = _set;
+  const get: (typeof useOllamaStore)["getState"] = _get;
+
+  const isBrowser = typeof window !== "undefined";
 
   return {
-    manageOllama: false,
+    manageOllama: isBrowser && localStorage.getItem(manageOllamaKey) === "true",
     setManageOllama(manageOllama: boolean) {
       localStorage.setItem(manageOllamaKey, String(manageOllama));
       invoke(API.SetManageOllama, { manage: manageOllama });
@@ -18,15 +21,16 @@ export const useOllamaStore = create((_set: any) => {
       set({ manageOllama });
     },
 
-    isOllamaRunning: false,
+    isOllamaRunning:
+      isBrowser && localStorage.getItem(manageOllamaKey) === "true", // predictive update
     async setIsOllamaRunning(setRunning: boolean) {
       if (!setRunning) {
         set({ isOllamaRunning: false });
         return await invoke(API.StopOllama, undefined);
       }
 
-      const status = await invoke(API.StartOllama, undefined);
-      if (status.error) return ollamaErrorToast();
+      if ((await invoke(API.StartOllama, undefined)).error)
+        return ollamaErrorToast();
 
       set({ isOllamaRunning: true });
 
@@ -39,20 +43,14 @@ export const useOllamaStore = create((_set: any) => {
       localStorage.setItem(localModelsKey, JSON.stringify(data));
     },
 
-    localModels: [] as string[],
+    localModels: (isBrowser
+      ? JSON.parse(localStorage.getItem(localModelsKey) ?? "[]")
+      : []) as string[],
 
     async initStore() {
-      const manageOllama = localStorage.getItem(manageOllamaKey) === "true";
-
-      set({
-        isOllamaRunning: manageOllama, // predictive update
-        manageOllama,
-        localModels: JSON.parse(localStorage.getItem(localModelsKey) ?? "[]"),
-      });
-
       const isOllamaRunning = !!(await invoke(API.CheckOllama, undefined)).data;
 
-      if (manageOllama && !isOllamaRunning) {
+      if (get().manageOllama && !isOllamaRunning) {
         ollamaErrorToast();
       }
 
@@ -86,13 +84,17 @@ export const botCardsKey = "botcards";
 export const useBotCards = create((_set: any) => {
   const set: (typeof useBotCards)["setState"] = _set;
 
+  const isBrowser = typeof window !== "undefined";
+
   return {
     runningBots: 0,
     setRunningBots(runningBots: number) {
       set({ runningBots });
     },
 
-    botCards: [] as BotCardData[],
+    botCards: (isBrowser
+      ? JSON.parse(localStorage.getItem(botCardsKey) ?? "[]")
+      : []) as BotCardData[],
     setBotCards(botCards: BotCardData[]) {
       localStorage.setItem(botCardsKey, JSON.stringify(botCards));
       set({ botCards });

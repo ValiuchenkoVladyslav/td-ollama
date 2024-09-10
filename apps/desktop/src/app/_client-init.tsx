@@ -1,13 +1,10 @@
 "use client";
 
-import { botCardsKey, useBotCards, useOllamaStore } from "~/store";
+import { useOllamaStore } from "~/store";
 
 if (typeof window !== "undefined") {
   // init store on client side
   useOllamaStore.getState().initStore();
-  useBotCards
-    .getState()
-    .setBotCards(JSON.parse(localStorage.getItem(botCardsKey) ?? "[]"));
 
   // disable some browser features so app feels more native
   if (process.env.NODE_ENV !== "development") {
