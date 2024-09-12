@@ -3,5 +3,5 @@ sherif -f
 biome check --staged --no-errors-on-unmatched --write
 turbo lint:fix
 
-# Readd staged files (--ignore-errors flag is needed when we're trying to readd deleted file)
-git add $(git diff --name-only --cached) --ignore-errors
+# Readd staged files (--ignore-missing flag is needed when we're trying to readd deleted file)
+git add $(git diff --name-only --cached) --dry-run --ignore-missing
