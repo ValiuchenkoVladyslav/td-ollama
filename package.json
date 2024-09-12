@@ -6,8 +6,8 @@
   "scripts": {
     "build": "turbo build",
     "build:debug": "turbo build:debug",
-    "lint": "bunx sherif && biome check . && turbo lint",
-    "lint:fix": "bunx sherif -f && biome check --staged --no-errors-on-unmatched --write . && turbo lint:fix",
+    "lint": "sherif && biome check && turbo lint",
+    "lint:fix": "sherif -f && biome check --write && turbo lint:fix",
     "dev:desktop": "bun --cwd ./apps/desktop dev",
     "dev:website": "bun --cwd ./apps/website dev"
   },
