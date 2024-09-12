@@ -6,14 +6,15 @@
   "scripts": {
     "build": "turbo build",
     "build:debug": "turbo build:debug",
-    "lint": "biome check . && turbo lint",
-    "lint:fix": "biome check --staged --no-errors-on-unmatched --write . && turbo lint:fix",
+    "lint": "bunx sherif && biome check . && turbo lint",
+    "lint:fix": "bunx sherif -f && biome check --staged --no-errors-on-unmatched --write . && turbo lint:fix",
     "dev:desktop": "bun --cwd ./apps/desktop dev",
     "dev:website": "bun --cwd ./apps/website dev"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "husky": "^9.1.5",
+    "sherif": "^1.0.0",
     "turbo": "^2.1.0"
   },
   "trustedDependencies": ["@biomejs/biome"]
