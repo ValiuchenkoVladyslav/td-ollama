@@ -11,7 +11,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     <html lang="en">
       <head />
 
-      <body className="flex flex-col min-h-[100dvh] bg-black text-white">
+      <body className="flex flex-col min-h-[100dvh] w-[screen] overflow-x-hidden bg-black text-white">
         <header className="horizontal-line">
           <Link
             href="/"
