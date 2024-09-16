@@ -1,21 +1,12 @@
 {
   "files.exclude": {
-    "**/node_modules/": true,
-    "**/.next/": true,
-    "**/next-env.d.ts": true,
-    "**/out/": true,
     "bun.lockb": true,
-
-    "apps/desktop/core/target/": true,
-    "apps/desktop/core/gen/": true,
+    "LICENSE": true,
     "apps/desktop/core/Cargo.lock": true,
-
-    "**/.turbo/": true,
   },
+  "explorer.excludeGitIgnore": true,
 
   "editor.inlayHints.enabled": "offUnlessPressed",
-
-  // rust-analyzer fails to discover itself
   "rust-analyzer.linkedProjects": [
     "apps/desktop/core/Cargo.toml"
   ]
