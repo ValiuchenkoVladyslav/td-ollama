@@ -4,6 +4,7 @@ import Link from "next/link";
 import Blue from "~/images/blue.png";
 import Pink from "~/images/pink.png";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ExternalLink } from "~/components/external-link";
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
@@ -58,6 +59,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
             className="absolute right-0 bottom-0 opacity-35 !w-[max(50vw,500px)]"
           />
         </div>
+
+        <SpeedInsights />
       </body>
     </html>
   );
