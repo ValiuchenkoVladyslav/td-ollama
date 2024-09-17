@@ -61,12 +61,14 @@ pub struct OllamaModel {
   pub name: String,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 pub struct OllamaModels {
   pub models: Vec<OllamaModel>,
 }
 
 pub async fn list_models() -> OllamaModels {
-  reqwest::get(format!("{OLLAMA_URL}tags"))
-    .await.unwrap().json().await.unwrap()
+  match reqwest::get(format!("{OLLAMA_URL}tags")).await {
+    Ok(res) => res.json().await.unwrap(),
+    _ => OllamaModels::default(),
+  }
 }
