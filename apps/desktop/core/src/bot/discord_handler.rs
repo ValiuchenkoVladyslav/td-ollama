@@ -1,7 +1,8 @@
+use super::utils::{BotConfig, BATCHING_MILLIS};
+use crate::ollama::api::{ChatStream, OllamaMessage, Role};
 use futures::StreamExt;
 use serenity::all::{async_trait, Context, EditMessage, EventHandler, Message};
-use crate::ollama::api::{ChatStream, OllamaMessage, Role};
-use super::utils::BotConfig;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub struct BotConfigData;
 
@@ -19,7 +20,12 @@ impl EventHandler for DiscordHandler {
     }
 
     let bot_data = ctx.data.read().await;
-    let BotConfig { allowed_ids, model, system, bot_chats } = bot_data.get::<BotConfigData>().unwrap();
+    let BotConfig {
+      allowed_ids,
+      model,
+      system,
+      bot_chats,
+    } = bot_data.get::<BotConfigData>().unwrap();
 
     let chat_id = msg.channel_id.to_string();
 
@@ -27,14 +33,17 @@ impl EventHandler for DiscordHandler {
       return; // Ignore messages from not allowed users
     }
 
-    let mut message_history = match bot_chats.lock().unwrap().iter().find(|(id, _)| id == &chat_id) {
+    let mut message_history = match bot_chats
+      .lock()
+      .unwrap()
+      .iter()
+      .find(|(id, _)| id == &chat_id)
+    {
       Some(chat) => chat.1.clone(),
-      None => vec![
-        OllamaMessage {
-          role: Role::System,
-          content: system.into(),
-        },
-      ]
+      None => vec![OllamaMessage {
+        role: Role::System,
+        content: system.into(),
+      }],
     };
 
     message_history.push(OllamaMessage {
@@ -44,25 +53,35 @@ impl EventHandler for DiscordHandler {
 
     // Get response from Ollama and send it to discord
     let Ok(mut res_stream) = ChatStream::new(&message_history, model).await else {
-      msg.reply(&ctx.http, "ERROR: Failed to connect to Ollama server!").await.unwrap();
+      msg
+        .reply(&ctx.http, "ERROR: Failed to connect to Ollama server!")
+        .await
+        .unwrap();
       return;
     };
 
     let mut ai_response = res_stream.next().await.unwrap().message;
     let mut bot_msg = msg.reply(&ctx.http, &ai_response.content).await.unwrap();
 
-    let mut counter = 0;
+    let mut start_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     while let Some(res) = res_stream.next().await {
-      counter += 1;
       ai_response.content.push_str(&res.message.content);
+      let current_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
 
-      if counter % 4 == 0 { // in order to avoid telegram rate limits
-        let _ = bot_msg.edit(&ctx.http, EditMessage::new().content(&ai_response.content)).await;
+      // in order to avoid telegram rate limits
+      if current_time - start_time > Duration::from_millis(BATCHING_MILLIS) {
+        let _ = bot_msg
+          .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
+          .await;
+        start_time = current_time;
       }
     }
 
-    if counter % 4 != 0 { // append missing final part if it exists
-      let _ = bot_msg.edit(&ctx.http, EditMessage::new().content(&ai_response.content)).await;
+    if start_time.as_millis() % BATCHING_MILLIS as u128 != 0 {
+      // append missing final part if it exists
+      let _ = bot_msg
+        .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
+        .await;
     }
 
     // Save new chat messages
