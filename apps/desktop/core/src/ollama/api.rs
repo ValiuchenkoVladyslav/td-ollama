@@ -1,12 +1,15 @@
-use serde::{Serialize, Deserialize};
+use futures::{
+  stream::Stream,
+  task::{Context, Poll},
+};
 use reqwest::{Client, Error};
+use serde::{Deserialize, Serialize};
 use std::pin::Pin;
-use futures::{task::{Context, Poll}, stream::Stream};
 
 const OLLAMA_URL: &str = "http://localhost:11434/api/";
 
 #[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all="lowercase")]
+#[serde(rename_all = "lowercase")]
 pub enum Role {
   System,
   User,
@@ -29,14 +32,25 @@ pub struct ChatStream {
 }
 
 impl ChatStream {
-  pub async fn new(messages: &Vec<OllamaMessage>, model: impl Into<String> + Serialize) -> Result<Self, Error> {
-    match Client::new().post(format!("{OLLAMA_URL}chat")).body(
-      serde_json::json!({
-        "model": model,
-        "messages": messages,
-      }).to_string()
-    ).send().await {
-      Ok(res) => Ok(Self { inner: Box::pin(res.bytes_stream()) }),
+  pub async fn new(
+    messages: &Vec<OllamaMessage>,
+    model: impl Into<String> + Serialize,
+  ) -> Result<Self, Error> {
+    match Client::new()
+      .post(format!("{OLLAMA_URL}chat"))
+      .body(
+        serde_json::json!({
+          "model": model,
+          "messages": messages,
+        })
+        .to_string(),
+      )
+      .send()
+      .await
+    {
+      Ok(res) => Ok(Self {
+        inner: Box::pin(res.bytes_stream()),
+      }),
       Err(err) => Err(err),
     }
   }
@@ -47,9 +61,7 @@ impl Stream for ChatStream {
 
   fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
     match self.get_mut().inner.as_mut().poll_next(cx) {
-      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(
-        Some(serde_json::from_slice(&bytes).unwrap())
-      ),
+      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(Some(serde_json::from_slice(&bytes).unwrap())),
       Poll::Ready(None) | Poll::Ready(Some(Err(_))) => Poll::Ready(None),
       Poll::Pending => Poll::Pending,
     }

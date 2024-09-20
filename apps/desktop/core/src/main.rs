@@ -1,8 +1,8 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem="windows")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod app_state;
 mod bot;
 mod ollama;
-mod app_state;
 
 use app_state::AppState;
 use std::sync::Mutex;
@@ -22,15 +22,17 @@ fn main() {
 
       Ok(())
     })
-    .on_window_event(|app, event| if let tauri::WindowEvent::Destroyed = event {
-      let state_mutex = app.state::<Mutex<AppState>>();
-      let app_state = state_mutex.lock().unwrap();
+    .on_window_event(|app, event| {
+      if let tauri::WindowEvent::Destroyed = event {
+        let state_mutex = app.state::<Mutex<AppState>>();
+        let app_state = state_mutex.lock().unwrap();
 
-      if app_state.manage_ollama {
-        ollama::tauri_commands::stop_ollama();
+        if app_state.manage_ollama {
+          ollama::tauri_commands::stop_ollama();
+        }
+
+        app_state.save(app.app_handle());
       }
-
-      app_state.save(app.app_handle());
     })
     // WARNING: UPDATE ../../src/core-api.ts WHENEVER YOU CHANGE COMMANDS
     .invoke_handler(tauri::generate_handler![

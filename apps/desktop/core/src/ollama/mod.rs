@@ -1,2 +1,2 @@
-pub mod tauri_commands;
 pub mod api;
+pub mod tauri_commands;

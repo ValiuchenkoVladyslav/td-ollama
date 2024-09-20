@@ -1,7 +1,7 @@
 use crate::app_state::CommandState;
 
-#[cfg(target_os="windows")]
-#[tauri::command(rename_all="snake_case")]
+#[cfg(target_os = "windows")]
+#[tauri::command(rename_all = "snake_case")]
 pub fn start_ollama() -> Result<(), ()> {
   use std::os::windows::process::CommandExt;
 
@@ -16,8 +16,8 @@ pub fn start_ollama() -> Result<(), ()> {
   }
 }
 
-#[cfg(not(target_os="windows"))]
-#[tauri::command(rename_all="snake_case")]
+#[cfg(not(target_os = "windows"))]
+#[tauri::command(rename_all = "snake_case")]
 pub fn start_ollama() -> Result<(), ()> {
   match std::process::Command::new("ollama").arg("serve").spawn() {
     Ok(_) => Ok(()),
@@ -25,7 +25,7 @@ pub fn start_ollama() -> Result<(), ()> {
   }
 }
 
-#[tauri::command(rename_all="snake_case")]
+#[tauri::command(rename_all = "snake_case")]
 pub fn stop_ollama() {
   let mut system = sysinfo::System::new();
   system.refresh_processes(sysinfo::ProcessesToUpdate::All);
@@ -38,7 +38,7 @@ pub fn stop_ollama() {
   }
 }
 
-#[tauri::command(rename_all="snake_case")]
+#[tauri::command(rename_all = "snake_case")]
 pub fn check_ollama() -> bool {
   let mut system = sysinfo::System::new();
   system.refresh_processes(sysinfo::ProcessesToUpdate::All);
@@ -53,14 +53,17 @@ pub fn check_ollama() -> bool {
   false
 }
 
-#[tauri::command(rename_all="snake_case")]
+#[tauri::command(rename_all = "snake_case")]
 pub fn set_manage_ollama(state: CommandState, manage: bool) {
   state.lock().unwrap().manage_ollama = manage;
 }
 
-#[tauri::command(rename_all="snake_case")]
+#[tauri::command(rename_all = "snake_case")]
 pub async fn list_models() -> Vec<String> {
-  super::api::list_models().await.models.iter()
+  super::api::list_models()
+    .await
+    .models
+    .iter()
     .map(|model| model.name.clone())
     .collect()
 }
