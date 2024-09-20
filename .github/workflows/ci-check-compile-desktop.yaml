@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-compiled-msi-nsis
-          path: apps/desktop/core/target/release/bundle/**/*
+          path: target/release/bundle/**/*
 
   check-compile-ubuntu:
     runs-on: ubuntu-latest
@@ -80,8 +80,8 @@ jobs:
         with:
           name: linux-compiled-rpm-deb
           path: |
-            apps/desktop/core/target/release/bundle/**/*
-            !apps/desktop/core/target/release/bundle/appimage
+            target/release/bundle/**/*
+            !target/release/bundle/appimage
 
   check-compile-macos:
     runs-on: macos-latest
@@ -111,4 +111,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-compiled-app-dmg
-          path: apps/desktop/core/target/x86_64-apple-darwin/release/bundle/**/*
+          path: target/x86_64-apple-darwin/release/bundle/**/*
