@@ -1,7 +1,6 @@
-use super::utils::{BotConfig, BATCHING_MILLIS};
+use super::utils::{get_current_time, BotConfig, BATCHING_MILLIS};
 use crate::ollama::api::{ChatStream, OllamaMessage, Role};
 use futures::StreamExt;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use teloxide::prelude::{Bot, Message, Requester};
 
 pub async fn handle_message(
@@ -56,14 +55,14 @@ pub async fn handle_message(
   let mut ai_response = res_stream.next().await.unwrap().message;
   let msg_id = bot.send_message(chat_id, &ai_response.content).await?.id;
 
-  let mut start_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+  let mut start_time = get_current_time();
   while let Some(res) = res_stream.next().await {
     ai_response.content.push_str(&res.message.content);
 
-    let current_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let current_time = get_current_time();
 
     // in order to avoid telegram rate limits
-    if current_time - start_time > Duration::from_millis(BATCHING_MILLIS) {
+    if current_time - start_time > std::time::Duration::from_millis(BATCHING_MILLIS) {
       bot
         .edit_message_text(chat_id, msg_id, &ai_response.content)
         .await?;

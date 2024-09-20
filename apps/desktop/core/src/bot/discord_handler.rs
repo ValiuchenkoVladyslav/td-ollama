@@ -1,8 +1,7 @@
-use super::utils::{BotConfig, BATCHING_MILLIS};
+use super::utils::{get_current_time, BotConfig, BATCHING_MILLIS};
 use crate::ollama::api::{ChatStream, OllamaMessage, Role};
 use futures::StreamExt;
 use serenity::all::{async_trait, Context, EditMessage, EventHandler, Message};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub struct BotConfigData;
 
@@ -63,13 +62,13 @@ impl EventHandler for DiscordHandler {
     let mut ai_response = res_stream.next().await.unwrap().message;
     let mut bot_msg = msg.reply(&ctx.http, &ai_response.content).await.unwrap();
 
-    let mut start_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let mut start_time = get_current_time();
     while let Some(res) = res_stream.next().await {
       ai_response.content.push_str(&res.message.content);
-      let current_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+      let current_time = get_current_time();
 
       // in order to avoid telegram rate limits
-      if current_time - start_time > Duration::from_millis(BATCHING_MILLIS) {
+      if current_time - start_time > std::time::Duration::from_millis(BATCHING_MILLIS * 2) {
         let _ = bot_msg
           .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
           .await;
@@ -77,7 +76,7 @@ impl EventHandler for DiscordHandler {
       }
     }
 
-    if start_time.as_millis() % BATCHING_MILLIS as u128 != 0 {
+    if start_time.as_millis() % (BATCHING_MILLIS * 2) as u128 != 0 {
       // append missing final part if it exists
       let _ = bot_msg
         .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
