@@ -9,7 +9,8 @@
     "lint": "sherif && biome check && turbo lint",
     "lint:fix": "sherif -f && biome check --write && turbo lint:fix",
     "dev:desktop": "bun --cwd ./apps/desktop dev",
-    "dev:website": "bun --cwd ./apps/website dev"
+    "dev:website": "bun --cwd ./apps/website dev",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
