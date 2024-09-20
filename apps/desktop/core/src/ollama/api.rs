@@ -61,7 +61,14 @@ impl Stream for ChatStream {
 
   fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
     match self.get_mut().inner.as_mut().poll_next(cx) {
-      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(Some(serde_json::from_slice(&bytes).unwrap())),
+      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(Some(serde_json::from_slice(&bytes).unwrap_or(
+        OllamaResponse {
+          message: OllamaMessage {
+            role: Role::Assistant,
+            content: "".to_string(),
+          },
+        },
+      ))),
       Poll::Ready(None) | Poll::Ready(Some(Err(_))) => Poll::Ready(None),
       Poll::Pending => Poll::Pending,
     }
