@@ -8,7 +8,7 @@ const localModelsKey = "localModels";
 function getCachedOr<T>(key: string, defaultValue: T): T {
   return typeof window === "undefined"
     ? defaultValue
-    : JSON.parse(localStorage.getItem(key) ?? String(defaultValue));
+    : JSON.parse(localStorage.getItem(key) ?? JSON.stringify(defaultValue));
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: unknown breaks the type
