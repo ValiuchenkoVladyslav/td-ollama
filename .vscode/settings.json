@@ -1,13 +1,10 @@
 {
   "files.exclude": {
     "bun.lockb": true,
+    "Cargo.lock": true,
     "LICENSE": true,
-    "apps/desktop/core/Cargo.lock": true,
   },
   "explorer.excludeGitIgnore": true,
 
   "editor.inlayHints.enabled": "offUnlessPressed",
-  "rust-analyzer.linkedProjects": [
-    "apps/desktop/core/Cargo.toml"
-  ]
 }

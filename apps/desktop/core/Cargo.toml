@@ -1,5 +1,3 @@
-cargo-features = ["profile-rustflags"]
-
 [package]
 name = "td-ollama-core"
 version = "1.0.0"
@@ -25,11 +23,7 @@ tauri-build = { version = "2.0.0-rc.5", features = [] }
 [features]
 custom-protocol = ["tauri/custom-protocol"]
 
-[profile.dev]
-rustflags = ["-Z", "threads=8"]
-
 [profile.release]
-rustflags = ["-Z", "threads=8"]
 codegen-units = 1
 panic = "abort"
 opt-level = "s"
