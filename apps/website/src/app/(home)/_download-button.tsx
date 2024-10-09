@@ -32,7 +32,7 @@ export function DownloadButton() {
       <DropdownMenuContent className="!border-white/40 max-w-[240px] sm:max-w-none sm:w-[320px]">
         <DropdownMenuItem className="flex justify-between items-center">
           <a
-            href="https://github.com/ValiuchenkoVladyslav/td-ollama/releases/download/1.0.0/td-ollama_1.0.0_x64_en-US.msi"
+            href="https://github.com/ValiuchenkoVladyslav/td-ollama/releases/download/1.0.0/tg-ollama_1.0.0_x64_en-US.msi"
             download="td-ollama-installer.msi"
             className={downloadMenuItem}
           >
