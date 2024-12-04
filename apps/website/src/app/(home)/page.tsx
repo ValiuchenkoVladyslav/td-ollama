@@ -35,7 +35,7 @@ export default function Home() {
           <p className="text-xl sm:text-2xl font-semibold">
             🎀✨ Just take a look at this catgirl demo
           </p>
-          <p className="opacity-70 text-xl sm:text-2xl md:max-w-[580px]">
+          <p className="opacity-70 text-xl sm:text-2xl md:max-w-[580px] hidden 2xl:block">
             You can create bots from your own Telegram / Discord tokens using
             any Ollama model, including custom ones
           </p>
