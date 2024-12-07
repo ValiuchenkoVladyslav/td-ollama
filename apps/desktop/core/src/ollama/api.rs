@@ -8,35 +8,31 @@ use std::pin::Pin;
 
 const OLLAMA_URL: &str = "http://localhost:11434/api/";
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Role {
   System,
   User,
+  #[default]
   Assistant,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 pub struct OllamaMessage {
   pub role: Role,
   pub content: String,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Default, Deserialize)]
 pub struct OllamaResponse {
   pub message: OllamaMessage,
 }
 
-pub struct ChatStream {
-  inner: Pin<Box<dyn Stream<Item = Result<bytes::Bytes, Error>> + Send + Unpin>>,
-}
+pub struct ChatStream(Pin<Box<dyn Stream<Item = Result<bytes::Bytes, Error>> + Send + Unpin>>);
 
 impl ChatStream {
-  pub async fn new(
-    messages: &Vec<OllamaMessage>,
-    model: impl Into<String> + Serialize,
-  ) -> Result<Self, Error> {
-    match Client::new()
+  pub async fn new(messages: &Vec<OllamaMessage>, model: &str) -> Result<Self, Error> {
+    Client::new()
       .post(format!("{OLLAMA_URL}chat"))
       .body(
         serde_json::json!({
@@ -47,40 +43,30 @@ impl ChatStream {
       )
       .send()
       .await
-    {
-      Ok(res) => Ok(Self {
-        inner: Box::pin(res.bytes_stream()),
-      }),
-      Err(err) => Err(err),
-    }
+      .map(|res| Self(Box::pin(res.bytes_stream())))
   }
 }
 
 impl Stream for ChatStream {
   type Item = OllamaResponse;
 
-  fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-    match self.get_mut().inner.as_mut().poll_next(cx) {
-      Poll::Ready(Some(Ok(bytes))) => Poll::Ready(Some(serde_json::from_slice(&bytes).unwrap_or(
-        OllamaResponse {
-          message: OllamaMessage {
-            role: Role::Assistant,
-            content: "".to_string(),
-          },
-        },
-      ))),
+  fn poll_next(mut self: Pin<&mut ChatStream>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+    match self.0.as_mut().poll_next(cx) {
+      Poll::Ready(Some(Ok(bytes))) => {
+        Poll::Ready(Some(serde_json::from_slice(&bytes).unwrap_or_default()))
+      }
       Poll::Ready(None) | Poll::Ready(Some(Err(_))) => Poll::Ready(None),
       Poll::Pending => Poll::Pending,
     }
   }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Deserialize)]
 pub struct OllamaModel {
   pub name: String,
 }
 
-#[derive(Default, Clone, Serialize, Deserialize)]
+#[derive(Default, Deserialize)]
 pub struct OllamaModels {
   pub models: Vec<OllamaModel>,
 }
