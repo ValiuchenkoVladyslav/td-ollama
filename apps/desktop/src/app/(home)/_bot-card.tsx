@@ -63,9 +63,9 @@ export function BotCard(props: BotCardData) {
   return (
     <form
       onSubmit={submitBotData}
-      className="rounded-xl bg-slate-950 p-8 flex flex-col gap-4"
+      className="rounded-xl bg-slate-950 p-4 flex flex-col gap-3"
     >
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         <BotTypeSelect
           isBotRunning={isBotRunning}
           control={control}
@@ -99,7 +99,7 @@ export function BotCard(props: BotCardData) {
       />
 
       <div className="flex justify-between">
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <RunBotButton isBotRunning={isBotRunning} />
 
           <ModelSelect

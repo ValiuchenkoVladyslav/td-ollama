@@ -36,7 +36,7 @@ export function BotTypeSelect(props: {
         >
           <SelectTrigger
             className={
-              "!w-[160px] " + (props.errors.bot_type && "border-red-600")
+              "!w-[145px] " + (props.errors.bot_type && "border-red-600")
             }
           >
             <SelectValue placeholder="Bot Type" />

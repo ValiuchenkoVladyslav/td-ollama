@@ -26,7 +26,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         </header>
 
         <main className="flex h-[calc(100vh-36px)]">
-          <section className="w-[300px] px-3 flex flex-col gap-6">
+          <section className="w-[270px] px-3 flex flex-col gap-6">
             <OllamaControl />
 
             <Separator />
@@ -37,8 +37,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
                 Additional info
               </h1>
               <p className="opacity-70">
-                * Keep in mind ollama api has no option to unload the model, so
-                after stopping the bot it just hangs in memory. Restart ollama
+                Ollama api has no option to unload the model, so after stopping
+                the bot it just hangs in memory for a little. Restart ollama
                 server manually to get rid of it.
               </p>
             </div>
@@ -54,8 +54,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
             </a>
           </section>
 
-          <section className="bg-white rounded-tl-md flex-1 overflow-y-scroll p-8">
-            <div className="grid grid-cols-2 gap-8 *:h-[320px]">{children}</div>
+          <section className="bg-white rounded-tl-md flex-1 overflow-y-scroll p-4">
+            <div className="grid grid-cols-2 gap-4 *:h-[320px]">{children}</div>
           </section>
         </main>
 
