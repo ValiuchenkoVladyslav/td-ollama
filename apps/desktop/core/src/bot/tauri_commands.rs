@@ -115,7 +115,13 @@ pub async fn stop_bot(state: CommandState<'_>, bot_type: BotType, token: String)
       let _ = token.shutdown().unwrap();
     }
   } else if let Some(shards) = state.lock().unwrap().running_ds_bots.remove(&token) {
-    tauri::async_runtime::block_on(shards.shutdown_all());
+    tauri::async_runtime::spawn({
+      let shards = shards.clone();
+
+      async move {
+        shards.shutdown_all().await;
+      }
+    });
   }
 
   Ok(())
