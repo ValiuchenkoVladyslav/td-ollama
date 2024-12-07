@@ -1,6 +1,6 @@
 use crate::{app_state::CommandState, bot::utils::BotConfig};
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum BotType {
   Telegram,
@@ -16,7 +16,7 @@ pub async fn run_bot(
   allowed_ids: Vec<String>,
   bot_type: BotType,
 ) -> Result<(), ()> {
-  if let BotType::Telegram = bot_type {
+  if BotType::Telegram == bot_type {
     // TELEGRAM BOT =================
     use super::telegram_handler::handle_message;
     use teloxide::{
@@ -51,7 +51,7 @@ pub async fn run_bot(
       .lock()
       .unwrap()
       .running_tg_bots
-      .push((dispatcher.shutdown_token(), token));
+      .insert(token, dispatcher.shutdown_token());
 
     tauri::async_runtime::spawn(async move {
       dispatcher.dispatch().await;
@@ -98,7 +98,7 @@ pub async fn run_bot(
       .lock()
       .unwrap()
       .running_ds_bots
-      .push((client.shard_manager.clone(), token));
+      .insert(token, client.shard_manager.clone());
 
     tauri::async_runtime::spawn(async move {
       client.start().await.unwrap();
@@ -110,25 +110,12 @@ pub async fn run_bot(
 
 #[tauri::command(rename_all = "snake_case")]
 pub async fn stop_bot(state: CommandState<'_>, bot_type: BotType, token: String) -> Result<(), ()> {
-  if let BotType::Telegram = bot_type {
-    let running_bots = &mut state.lock().unwrap().running_tg_bots;
-    if let Some((shutdown_token, _)) = running_bots.iter().find(|(_, t)| t == &token) {
-      std::mem::drop(shutdown_token.shutdown().unwrap());
+  if BotType::Telegram == bot_type {
+    if let Some(token) = state.lock().unwrap().running_tg_bots.remove(&token) {
+      let _ = token.shutdown().unwrap();
     }
-
-    running_bots.retain(|(_, t)| t != &token);
-  } else {
-    let running_bots = &mut state.lock().unwrap().running_ds_bots.clone();
-    if let Some((shard_manager, _)) = running_bots.iter().find(|(_, t)| t == &token) {
-      tauri::async_runtime::spawn({
-        let shard_manager = shard_manager.clone();
-        async move {
-          shard_manager.shutdown_all().await;
-        }
-      });
-    }
-
-    running_bots.retain(|(_, t)| t != &token);
+  } else if let Some(shards) = state.lock().unwrap().running_ds_bots.remove(&token) {
+    tauri::async_runtime::block_on(shards.shutdown_all());
   }
 
   Ok(())

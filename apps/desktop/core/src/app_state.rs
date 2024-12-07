@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{collections::HashMap, fs::File};
 use tauri::{AppHandle, Manager};
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
@@ -6,9 +6,9 @@ pub struct AppState {
   pub manage_ollama: bool,
 
   #[serde(skip)]
-  pub running_tg_bots: Vec<(teloxide::dispatching::ShutdownToken, String)>,
+  pub running_tg_bots: HashMap<String, teloxide::dispatching::ShutdownToken>,
   #[serde(skip)]
-  pub running_ds_bots: Vec<(std::sync::Arc<serenity::all::ShardManager>, String)>,
+  pub running_ds_bots: HashMap<String, std::sync::Arc<serenity::all::ShardManager>>,
 }
 
 impl AppState {
@@ -25,10 +25,9 @@ impl AppState {
   }
 
   pub fn load(handle: &AppHandle) -> Self {
-    match File::open(Self::config_file_path(handle)) {
-      Ok(config_file) => serde_json::from_reader(config_file).unwrap(),
-      _ => Self::default(),
-    }
+    File::open(Self::config_file_path(handle))
+      .map(|config| serde_json::from_reader(config).unwrap())
+      .unwrap_or_default()
   }
 }
 

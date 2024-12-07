@@ -1,4 +1,4 @@
-use super::utils::{get_current_time, BotConfig, BATCHING_MILLIS};
+use super::utils::{current_time, BotConfig, BATCHING_MILLIS};
 use crate::ollama::api::{ChatStream, OllamaMessage, Role};
 use futures::StreamExt;
 use teloxide::prelude::{Bot, Message, Requester};
@@ -12,9 +12,6 @@ pub async fn handle_message(
     return Ok(()); // Ignore non-text messages and channels
   };
 
-  let chat_id = msg.chat.id;
-  let chat_str = chat_id.to_string();
-
   let BotConfig {
     allowed_ids,
     model,
@@ -26,18 +23,17 @@ pub async fn handle_message(
     return Ok(()); // Ignore messages from not allowed users
   }
 
-  let mut message_history = match bot_chats
+  let chat_id = msg.chat.id;
+
+  let mut message_history = bot_chats
     .lock()
     .unwrap()
-    .iter()
-    .find(|(id, _)| id == &chat_str)
-  {
-    Some(chat) => chat.1.clone(),
-    None => vec![OllamaMessage {
+    .get(&chat_id.0)
+    .unwrap_or(&vec![OllamaMessage {
       role: Role::System,
       content: system.into(),
-    }],
-  };
+    }])
+    .clone();
 
   message_history.push(OllamaMessage {
     role: Role::User,
@@ -55,11 +51,11 @@ pub async fn handle_message(
   let mut ai_response = res_stream.next().await.unwrap().message;
   let msg_id = bot.send_message(chat_id, &ai_response.content).await?.id;
 
-  let mut start_time = get_current_time();
+  let mut start_time = current_time();
   while let Some(res) = res_stream.next().await {
     ai_response.content.push_str(&res.message.content);
 
-    let current_time = get_current_time();
+    let current_time = current_time();
 
     // in order to avoid telegram rate limits
     if current_time - start_time > std::time::Duration::from_millis(BATCHING_MILLIS) {
@@ -70,23 +66,16 @@ pub async fn handle_message(
     }
   }
 
+  // append missing final part if it exists
   if start_time.as_millis() % BATCHING_MILLIS as u128 != 0 {
-    // append missing final part if it exists
     bot
       .edit_message_text(chat_id, msg_id, &ai_response.content)
       .await?;
   }
 
-  // Save new chat messages
-  let mut bot_chats = bot_chats.lock().unwrap();
-
   message_history.push(ai_response);
 
-  if let Some(chat_index) = bot_chats.iter().position(|(id, _)| id == &chat_str) {
-    bot_chats[chat_index].1 = message_history;
-  } else {
-    bot_chats.push((chat_str, message_history));
-  }
+  bot_chats.lock().unwrap().insert(chat_id.0, message_history);
 
   Ok(())
 }
