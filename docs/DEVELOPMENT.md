@@ -46,12 +46,13 @@ It just runs Next.js dev server on http://localhost:3000.
 ```sh
 bun build
 ```
-> Compiled desktop app is located in `apps/desktop/core/target/release`
 
-> If you want to compile the app for other targets go to `apps/desktop/core/` and specify it when running build command manually `cargo build --release --target=*`. Examples:\
-> `cargo build --release --target=x86_64-unknown-linux-gnu`\
-> `cargo build --release --target=x86_64-apple-darwin`\
-> Use `rustc --print target-list` to check supported targets.
+#### Compile for other targets
+Run build command manually `cargo build --release --target=*`. Examples:
+- `cargo build --release --target=x86_64-unknown-linux-gnu`
+- `cargo build --release --target=x86_64-apple-darwin`
+
+Use `rustc --print target-list` to check supported targets.
 
 ### More info
 You can also utilize other commands in `package.json` files so make sure to check them for additional info.
