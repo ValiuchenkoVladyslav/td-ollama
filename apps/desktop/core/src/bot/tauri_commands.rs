@@ -112,7 +112,7 @@ pub async fn run_bot(
 pub async fn stop_bot(state: CommandState<'_>, bot_type: BotType, token: String) -> Result<(), ()> {
   if BotType::Telegram == bot_type {
     if let Some(token) = state.lock().unwrap().running_tg_bots.remove(&token) {
-      let _ = token.shutdown().unwrap();
+      std::mem::drop(token.shutdown().unwrap());
     }
   } else if let Some(shards) = state.lock().unwrap().running_ds_bots.remove(&token) {
     tauri::async_runtime::spawn({
