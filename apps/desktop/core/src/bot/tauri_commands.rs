@@ -1,4 +1,4 @@
-use crate::{app_state::CommandState, bot::utils::BotConfig};
+use crate::{app_state::CmdState, bot::utils::BotConfig};
 
 #[derive(serde::Serialize, serde::Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -9,7 +9,7 @@ pub enum BotType {
 
 #[tauri::command(rename_all = "snake_case")]
 pub async fn run_bot(
-  state: CommandState<'_>,
+  state: CmdState<'_>,
   token: String,
   system: String,
   model: String,
@@ -109,7 +109,7 @@ pub async fn run_bot(
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub async fn stop_bot(state: CommandState<'_>, bot_type: BotType, token: String) -> Result<(), ()> {
+pub async fn stop_bot(state: CmdState<'_>, bot_type: BotType, token: String) -> Result<(), ()> {
   if BotType::Telegram == bot_type {
     if let Some(token) = state.lock().unwrap().running_tg_bots.remove(&token) {
       std::mem::drop(token.shutdown().unwrap());

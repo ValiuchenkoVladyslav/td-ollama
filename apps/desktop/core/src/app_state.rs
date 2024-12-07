@@ -31,4 +31,4 @@ impl AppState {
   }
 }
 
-pub type CommandState<'s> = tauri::State<'s, std::sync::Mutex<AppState>>;
+pub type CmdState<'s> = tauri::State<'s, std::sync::Mutex<AppState>>;

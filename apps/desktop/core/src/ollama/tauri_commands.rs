@@ -1,4 +1,4 @@
-use crate::app_state::CommandState;
+use crate::app_state::CmdState;
 
 #[cfg(target_os = "windows")]
 #[tauri::command(rename_all = "snake_case")]
@@ -54,7 +54,7 @@ pub fn check_ollama() -> bool {
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn set_manage_ollama(state: CommandState, manage: bool) {
+pub fn set_manage_ollama(state: CmdState, manage: bool) {
   state.lock().unwrap().manage_ollama = manage;
 }
 
