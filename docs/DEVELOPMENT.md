@@ -44,7 +44,7 @@ It just runs Next.js dev server on http://localhost:3000.
 
 ### Compile the project
 ```sh
-bun build
+bun run build
 ```
 
 #### Compile for other targets
