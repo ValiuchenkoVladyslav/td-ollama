@@ -4047,6 +4047,7 @@ version = "1.0.0"
 dependencies = [
  "bytes",
  "futures",
+ "parking_lot",
  "reqwest 0.12.7",
  "serde",
  "serde_json",

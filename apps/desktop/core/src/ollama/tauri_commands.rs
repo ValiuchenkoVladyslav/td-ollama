@@ -55,7 +55,7 @@ pub fn check_ollama() -> bool {
 
 #[tauri::command(rename_all = "snake_case")]
 pub fn set_manage_ollama(state: CmdState, manage: bool) {
-  state.lock().unwrap().manage_ollama = manage;
+  state.lock().manage_ollama = manage;
 }
 
 #[tauri::command(rename_all = "snake_case")]

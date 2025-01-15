@@ -1,4 +1,5 @@
-use std::{collections::HashMap, fs::File};
+use parking_lot::Mutex;
+use std::{collections::HashMap, fs::File, path, sync::Arc};
 use tauri::{AppHandle, Manager};
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
@@ -8,11 +9,11 @@ pub struct AppState {
   #[serde(skip)]
   pub running_tg_bots: HashMap<String, teloxide::dispatching::ShutdownToken>,
   #[serde(skip)]
-  pub running_ds_bots: HashMap<String, std::sync::Arc<serenity::all::ShardManager>>,
+  pub running_ds_bots: HashMap<String, Arc<serenity::all::ShardManager>>,
 }
 
 impl AppState {
-  fn config_file_path(handle: &AppHandle) -> std::path::PathBuf {
+  fn config_file_path(handle: &AppHandle) -> path::PathBuf {
     handle.path().app_data_dir().unwrap().join("app_state.json")
   }
 
@@ -31,4 +32,4 @@ impl AppState {
   }
 }
 
-pub type CmdState<'s> = tauri::State<'s, std::sync::Mutex<AppState>>;
+pub type CmdState<'s> = tauri::State<'s, Mutex<AppState>>;

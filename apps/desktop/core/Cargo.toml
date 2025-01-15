@@ -15,6 +15,7 @@ serde_json = "1"
 sysinfo = { version = "*", default-features = false, features = ["system"] }
 reqwest = { version = "*", default-features = false, features = ["default-tls", "stream"] }
 futures = { version = "*", default-features = false, features = ["std"] }
+parking_lot = { version = "0.12.3", features = ["hardware-lock-elision"] }
 bytes = "1"
 
 [build-dependencies]

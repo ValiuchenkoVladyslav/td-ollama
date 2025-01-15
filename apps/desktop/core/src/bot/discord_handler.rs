@@ -34,7 +34,6 @@ impl EventHandler for DiscordHandler {
 
     let mut message_history = bot_chats
       .lock()
-      .unwrap()
       .get(&chat_id)
       .unwrap_or(&vec![OllamaMessage {
         role: Role::System,
@@ -82,6 +81,6 @@ impl EventHandler for DiscordHandler {
 
     message_history.push(ai_response);
 
-    bot_chats.lock().unwrap().insert(chat_id, message_history);
+    bot_chats.lock().insert(chat_id, message_history);
   }
 }

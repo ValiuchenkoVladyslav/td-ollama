@@ -5,7 +5,7 @@ mod bot;
 mod ollama;
 
 use app_state::AppState;
-use std::sync::Mutex;
+use parking_lot::Mutex;
 use tauri::Manager;
 
 fn main() {
@@ -25,7 +25,7 @@ fn main() {
     .on_window_event(|app, event| {
       if let tauri::WindowEvent::Destroyed = event {
         let state_mutex = app.state::<Mutex<AppState>>();
-        let app_state = state_mutex.lock().unwrap();
+        let app_state = state_mutex.lock();
 
         if app_state.manage_ollama {
           ollama::tauri_commands::stop_ollama();

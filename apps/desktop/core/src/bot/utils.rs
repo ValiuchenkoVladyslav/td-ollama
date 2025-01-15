@@ -1,7 +1,7 @@
 use crate::ollama::api::OllamaMessage;
+use parking_lot::Mutex;
 use std::{
   collections::HashMap,
-  sync::Mutex,
   time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
