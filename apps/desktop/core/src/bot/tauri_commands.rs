@@ -20,8 +20,9 @@ pub async fn run_bot(
     // TELEGRAM BOT =================
     use super::telegram_handler::handle_message;
     use teloxide::{
-      self as tl,
       dispatching::{Dispatcher, UpdateFilterExt},
+      types::Update,
+      Bot,
     };
 
     // validate token
@@ -34,27 +35,30 @@ pub async fn run_bot(
       return Err(());
     }
 
-    // run bot
-    let mut dispatcher = Dispatcher::builder(
-      tl::Bot::new(&token),
-      tl::types::Update::filter_message().endpoint(handle_message),
-    )
-    .dependencies(tl::dptree::deps![std::sync::Arc::new(BotConfig {
+    let config = std::sync::Arc::new(BotConfig {
       allowed_ids,
       model,
       system,
-      bot_chats: Default::default()
-    })])
+      bot_chats: Default::default(),
+    });
+
+    let mut bot = Dispatcher::builder(
+      Bot::new(&token),
+      Update::filter_message().endpoint({
+        let config = config.clone();
+
+        move |bot, msg| handle_message(bot, config.clone(), msg)
+      }),
+    )
     .build();
 
     state
       .lock()
-      .unwrap()
       .running_tg_bots
-      .insert(token, dispatcher.shutdown_token());
+      .insert(token, bot.shutdown_token());
 
     tauri::async_runtime::spawn(async move {
-      dispatcher.dispatch().await;
+      bot.dispatch().await;
     });
   } else {
     // DISCORD BOT ===========================
@@ -64,7 +68,7 @@ pub async fn run_bot(
     // validate token
     let bot_status = reqwest::Client::new()
       .get("https://discord.com/api/v10/users/@me")
-      .header("Authorization", format!("Bot {}", token))
+      .header("Authorization", format!("Bot {token}"))
       .send()
       .await
       .unwrap()
@@ -96,7 +100,6 @@ pub async fn run_bot(
 
     state
       .lock()
-      .unwrap()
       .running_ds_bots
       .insert(token, client.shard_manager.clone());
 
@@ -111,16 +114,12 @@ pub async fn run_bot(
 #[tauri::command(rename_all = "snake_case")]
 pub async fn stop_bot(state: CmdState<'_>, bot_type: BotType, token: String) -> Result<(), ()> {
   if BotType::Telegram == bot_type {
-    if let Some(token) = state.lock().unwrap().running_tg_bots.remove(&token) {
+    if let Some(token) = state.lock().running_tg_bots.remove(&token) {
       std::mem::drop(token.shutdown().unwrap());
     }
-  } else if let Some(shards) = state.lock().unwrap().running_ds_bots.remove(&token) {
-    tauri::async_runtime::spawn({
-      let shards = shards.clone();
-
-      async move {
-        shards.shutdown_all().await;
-      }
+  } else if let Some(shards) = state.lock().running_ds_bots.remove(&token) {
+    tauri::async_runtime::spawn(async move {
+      shards.shutdown_all().await;
     });
   }
 
