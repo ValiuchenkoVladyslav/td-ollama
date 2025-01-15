@@ -1,26 +1,17 @@
 use crate::app_state::CmdState;
 
-#[cfg(target_os = "windows")]
 #[tauri::command(rename_all = "snake_case")]
-pub fn start_ollama() -> Result<(), ()> {
-  use std::os::windows::process::CommandExt;
+pub fn start_ollama() -> tauri::Result<()> {
+  let mut cmd = std::process::Command::new("ollama");
 
-  std::process::Command::new("ollama")
-    .arg("serve")
-    .creation_flags(0x08000000) // CREATE_NO_WINDOW
-    .spawn()
-    .unwrap();
+  #[cfg(target_os = "windows")]
+  {
+    use std::os::windows::process::CommandExt;
 
-  Ok(())
-}
+    cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+  }
 
-#[cfg(not(target_os = "windows"))]
-#[tauri::command(rename_all = "snake_case")]
-pub fn start_ollama() -> Result<(), ()> {
-  std::process::Command::new("ollama")
-    .arg("serve")
-    .spawn()
-    .unwrap();
+  cmd.arg("serve").spawn()?;
 
   Ok(())
 }
