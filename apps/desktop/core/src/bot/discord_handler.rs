@@ -2,6 +2,10 @@ use super::utils::{current_time, BotConfig, BATCHING_MILLIS};
 use crate::ollama::api::{ChatStream, OllamaMessage, Role};
 use futures::StreamExt;
 use serenity::all::{async_trait, Context, EditMessage, EventHandler, Message};
+use std::time::Duration;
+
+/// after testing i found out that discord's rate limits are slightly stricter than telegram's
+const DS_BATCHING_MILLIS: Duration = BATCHING_MILLIS.saturating_mul(2);
 
 pub struct BotConfigData;
 
@@ -64,7 +68,7 @@ impl EventHandler for DiscordHandler {
       let current_time = current_time();
 
       // in order to avoid telegram rate limits
-      if current_time - start_time > std::time::Duration::from_millis(BATCHING_MILLIS * 2) {
+      if current_time - start_time > DS_BATCHING_MILLIS {
         let _ = bot_msg
           .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
           .await;
@@ -73,7 +77,7 @@ impl EventHandler for DiscordHandler {
     }
 
     // append missing final part if it exists
-    if start_time.as_millis() % (BATCHING_MILLIS * 2) as u128 != 0 {
+    if start_time.as_millis() % DS_BATCHING_MILLIS.as_millis() != 0 {
       let _ = bot_msg
         .edit(&ctx.http, EditMessage::new().content(&ai_response.content))
         .await;

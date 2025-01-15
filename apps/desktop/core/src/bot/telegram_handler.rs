@@ -57,7 +57,7 @@ pub async fn handle_message(
     let current_time = current_time();
 
     // in order to avoid telegram rate limits
-    if current_time - start_time > std::time::Duration::from_millis(BATCHING_MILLIS) {
+    if current_time - start_time > BATCHING_MILLIS {
       bot
         .edit_message_text(chat_id, msg_id, &ai_response.content)
         .await?;
@@ -66,7 +66,7 @@ pub async fn handle_message(
   }
 
   // append missing final part if it exists
-  if start_time.as_millis() % BATCHING_MILLIS as u128 != 0 {
+  if start_time.as_millis() % BATCHING_MILLIS.as_millis() != 0 {
     bot
       .edit_message_text(chat_id, msg_id, &ai_response.content)
       .await?;
