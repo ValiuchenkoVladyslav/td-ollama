@@ -43,10 +43,28 @@ export function DownloadButton() {
             >
               <path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z" />
             </svg>
-            Windows installer
+            Windows
           </a>
           <span className="py-0.5 px-2 bg-white text-black rounded-xl font-medium hidden sm:block">
-            release
+            v1 release
+          </span>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex justify-between items-center">
+          <a
+            href="https://github.com/ValiuchenkoVladyslav/td-ollama/actions/workflows/ci-check-compile-desktop.yaml"
+            className={downloadMenuItem}
+          >
+            <svg
+              fill="currentColor"
+              viewBox="0 0 448 512"
+              className="h-8 w-8 p-1"
+            >
+              <path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z" />
+            </svg>
+            Windows
+          </a>
+          <span className="py-0.5 px-2 bg-white text-black rounded-xl font-medium hidden sm:block">
+            telegram support
           </span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
