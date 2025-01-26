@@ -31,11 +31,6 @@ jobs:
       # install bun
       - uses: oven-sh/setup-bun@v1
 
-      # install rust
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-
       - name: Install bun dependencies
         run: bun install
 
@@ -56,11 +51,6 @@ jobs:
 
       # install bun
       - uses: oven-sh/setup-bun@v1
-
-      # install rust
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
 
       - run: sudo apt-get update
 
@@ -90,22 +80,26 @@ jobs:
       # install bun
       - uses: oven-sh/setup-bun@v1
 
-      # install rust
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-
       - name: Install bun dependencies
         run: bun install
 
-      - name: Install macos target
-        run: rustup target add x86_64-apple-darwin
+      # - name: Install macos target
+      #   run: rustup target add x86_64-apple-darwin
+
+      # - name: Check if project compiles
+      #   run: bunx turbo run build --filter=td-ollama-desktop -- --target=x86_64-apple-darwin
+
+      # - name: Archive compiled for macos
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: macos-compiled-app-dmg
+      #     path: target/x86_64-apple-darwin/release/bundle/**/*
 
       - name: Check if project compiles
-        run: bunx turbo run build --filter=td-ollama-desktop -- --target=x86_64-apple-darwin
+        run: bunx turbo run build --filter=td-ollama-desktop
 
       - name: Archive compiled for macos
         uses: actions/upload-artifact@v4
         with:
           name: macos-compiled-app-dmg
-          path: target/x86_64-apple-darwin/release/bundle/**/*
+          path: target/release/bundle/**/*
