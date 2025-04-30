@@ -5,7 +5,7 @@
     "icon": ["icons/icon.png", "icons/icon.ico"]
   },
   "build": {
-    "beforeDevCommand": "bun run next dev",
+    "beforeDevCommand": "bun run next dev --turbo",
     "frontendDist": "../out/",
     "devUrl": "http://localhost:3000"
   },

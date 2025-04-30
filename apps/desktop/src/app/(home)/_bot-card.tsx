@@ -63,7 +63,7 @@ export function BotCard(props: BotCardData) {
   return (
     <form
       onSubmit={submitBotData}
-      className="rounded-xl bg-slate-950 p-4 flex flex-col gap-3"
+      className="rounded-xl bg-background p-4 flex flex-col gap-3"
     >
       <div className="flex gap-3">
         <BotTypeSelect

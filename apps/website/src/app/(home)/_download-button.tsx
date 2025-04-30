@@ -64,7 +64,7 @@ export function DownloadButton() {
             Windows
           </a>
           <span className="py-0.5 px-2 bg-white text-black rounded-xl font-medium hidden sm:block">
-            telegram support
+            discord support
           </span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

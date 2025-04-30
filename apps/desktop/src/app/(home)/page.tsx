@@ -17,7 +17,7 @@ export default function Home() {
 
       <button
         type="button"
-        className="bg-slate-950 hover:opacity-95 duration-300 rounded-xl flex items-center justify-center gap-2"
+        className="bg-background hover:opacity-95 duration-300 rounded-xl flex items-center justify-center gap-2"
         onClick={() => {
           let highestIndex = 0;
 
